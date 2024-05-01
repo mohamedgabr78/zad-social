@@ -3,6 +3,7 @@ import connectDB from './database/connectDB.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/userRoutes.js';
+import postRoutes from './routes/postRoutes.js';
 
 dotenv.config();
 connectDB(); 
@@ -20,6 +21,7 @@ app.use(cookieParser()); // to parse cookies from the request headers
 
 // routes
 app.use('/api/users', userRoutes); // all routes in userRoutes will start with /api/users
+app.use('/api/posts', postRoutes); // all routes in postRoutes will start with /api/posts
 
 
 app.listen(PORT, () => {
