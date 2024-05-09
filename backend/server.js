@@ -4,13 +4,18 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
+import cors from 'cors';
+
 
 dotenv.config();
 connectDB(); 
 const app = express();
 
+// fix CORS issue
+app.use(cors());
 
-const PORT = process.env.PORT || 3000; // if PORT is not defined in .env file, then use 3000 as default
+
+const PORT = process.env.PORT || 5000;
 
 
 // middleware
@@ -25,5 +30,5 @@ app.use('/api/posts', postRoutes); // all routes in postRoutes will start with /
 
 
 app.listen(PORT, () => {
-    console.log('Server is running on http://localhost:3000');
+    console.log(`Server is running on http://localhost:${PORT}`);
     });

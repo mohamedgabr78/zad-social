@@ -16,3 +16,5 @@ router.post('/update/:id', protectRoute, updateUser)
 
 
 export default router;
+
+

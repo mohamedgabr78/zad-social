@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Flex, Avatar, Box,Text, Image } from "@chakra-ui/react"
 import { BsThreeDots } from "react-icons/bs";
-import { Link } from "react-router-dom";
 import Actions from "../components/Actions";
 
 const PostPage = ({
