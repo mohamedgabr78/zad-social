@@ -20,7 +20,7 @@ import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useSetRecoilState } from 'recoil'
 import { authScreenAtom } from '../atoms/authAtoms'
-import useShowToast from '../hook/useShowToast'
+import useShowToast from '../hooks/useShowToast'
 import { userAtom } from '../atoms/userAtoms'
 
 export default function SignupCard() {

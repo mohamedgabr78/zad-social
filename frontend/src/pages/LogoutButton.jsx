@@ -1,7 +1,8 @@
 import { Button } from '@chakra-ui/react'
 import { useSetRecoilState } from 'recoil'
 import { userAtom } from '../atoms/userAtoms'
-import useShowToast from '../hook/useShowToast'
+import useShowToast from '../hooks/useShowToast'
+import { GrLogout } from "react-icons/gr";
 
 function LogoutButton() {
 
@@ -30,8 +31,8 @@ function LogoutButton() {
     }
 
   return (
-    <Button colorScheme='red' onClick={handleLogout}>
-        Logout
+    <Button colorScheme='red' onClick={handleLogout} position={'fixed'} top={'30px'} right={'30px'}>
+        <GrLogout size={20}/> 
     </Button>
   )
 }

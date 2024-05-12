@@ -7,7 +7,6 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  HStack,
   InputRightElement,
   Stack,
   Button,
@@ -20,7 +19,7 @@ import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useSetRecoilState } from 'recoil'
 import { authScreenAtom } from '../atoms/authAtoms'
-import useShowToast from '../hook/useShowToast'
+import useShowToast from '../hooks/useShowToast'
 import { userAtom } from '../atoms/userAtoms'
 
 export default function LoginCard() {
@@ -35,13 +34,12 @@ export default function LoginCard() {
   const setUser = useSetRecoilState(userAtom)
 
   const handelLogin = async() => {
-    console.log(inputs)
     if(!inputs.username || !inputs.password) {
       showToast("Error","Please fill all the fields","error")
       return
     }
     try {
-      const res = await fetch('http://localhost:5000/api/users/login', {
+      const res = await fetch('/api/users/login', {
         method: 'POST',
         withCredentials: true,
         headers: {
