@@ -29,7 +29,6 @@ const createPost = async (req, res) => {
         res.status(201).json(newPost);
     }catch (error) {
         res.status(500).json({ error: error.message });
-        console.log(error);
     }
 }
 
@@ -44,7 +43,6 @@ const getPost = async (req, res) => {
         res.status(200).json(post);
     }catch (error) {
         res.status(500).json({ error: error.message });
-        console.log(error);
     }
 }
 
@@ -65,7 +63,6 @@ const deletePost = async (req, res) => {
 
     }catch (error) {
         res.status(500).json({ error: error.message });
-        console.log(error);
     }
 }
 
@@ -99,7 +96,6 @@ const likeUnlikePost = async (req, res) => {
 
     }catch (error) {
         res.status(500).json({ error: error.message });
-        console.log(error);
     }
 }
 
@@ -133,7 +129,6 @@ const replyToPost = async (req, res) =>{
 
         }catch (error) {
             res.status(500).json({ error: error.message });
-            console.log(error);
     }
 }
 
@@ -151,7 +146,6 @@ const feedPosts = async (req, res) => {
 
     }catch (error) {
         res.status(500).json({ error: error.message });
-        console.log(error);
     }
 }
 

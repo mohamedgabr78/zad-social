@@ -22,7 +22,7 @@ import usePreviewImg from '../hooks/usePreviewImg';
 
     const [user, setUser] = useRecoilState(userAtom);
     const [inputs, setInputs] = useState({
-        userName: user.username,
+        username: user.username,
         email: user.email,
         fullName: user.name,
         bio: user.bio,
@@ -58,17 +58,15 @@ import usePreviewImg from '../hooks/usePreviewImg';
                 return;
             }
 
-            localStorage.setItem('user-threads', JSON.stringify(data));
             setUser(data);
             showToast('Success', 'Profile updated successfully', 'success');
+            localStorage.setItem('user-threads', JSON.stringify(data));
         } catch (error) {
             showToast('Error', error, 'error');
         } finally {
             setUpdating(false);
         }
     }
-
-    console.log({...inputs, profilePic: imgUrl})
 
     return (
     <form onSubmit={handleSubmit}>
@@ -99,13 +97,13 @@ import usePreviewImg from '../hooks/usePreviewImg';
               </Center>
             </Stack>
           </FormControl>
-          <FormControl id="userName">
+          <FormControl id="username">
             <FormLabel>User name</FormLabel>
             <Input
               placeholder="UserName"
               _placeholder={{ color: 'gray.500' }}
               type="text"
-              value={inputs.userName} onChange={e=>{setInputs({...inputs, username:e.target.value})}}/>
+              value={inputs.username} onChange={e=>{setInputs({...inputs, username:e.target.value})}}/>
           </FormControl>
           <FormControl id="email">
             <FormLabel>Email address</FormLabel>

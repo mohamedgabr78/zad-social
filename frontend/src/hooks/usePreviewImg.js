@@ -19,7 +19,6 @@ const usePreviewImg = () => {
 			setImgUrl(null);
 		}
 	};
-	console.log("hook",imgUrl);
 	return { handleImageChange, imgUrl, setImgUrl };
 };
 
