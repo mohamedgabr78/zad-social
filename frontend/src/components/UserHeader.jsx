@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { BsGithub, BsLinkedin } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
 import { useRecoilValue } from "recoil";
-import { userAtom } from "../atoms/userAtoms";
+import { userAtom } from '../atoms';
 import useShowToast from "../hooks/useShowToast";
 import { useState } from "react";
 

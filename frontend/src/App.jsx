@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage";
 import { userAtom } from "./atoms/userAtoms";
 import LogoutButton from "./pages/LogoutButton";
 import UpdateProfile from "./pages/UpdateProfile";
+import CreatePost from "./components/CreatePost";
 
 function App() {
 
@@ -25,7 +26,8 @@ function App() {
         <Route path='/:username/post/:pid' element={<PostPage />} />
       </Routes>  
 
-      {user? <LogoutButton /> : null}
+      {user && <LogoutButton />}
+      {user && <CreatePost />}
     </Container>
   )
 }
