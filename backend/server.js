@@ -25,7 +25,7 @@ cloudinary.config({
 
 
 // middleware
-app.use(express.json()); // to parse json data from the request body
+app.use(express.json({limit: "50mb"})); // to parse json data from the request body
 app.use(express.urlencoded({ extended: true })); // to parse url-encoded data from the request body
 app.use(cookieParser()); // to parse cookies from the request headers
 app.use(cors()); // to allow cross-origin requests

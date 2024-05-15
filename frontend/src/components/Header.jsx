@@ -3,6 +3,9 @@ import { useRecoilValue } from "recoil"
 import { userAtom } from "../atoms"
 import { AiFillHome } from "react-icons/ai"
 import { RxAvatar } from "react-icons/rx"
+import { Link as RouterLink } from "react-router-dom"
+import { authScreenAtom } from "../atoms"
+
 
 
 const Header = () => {
@@ -12,10 +15,16 @@ const Header = () => {
     return (
         <Flex justifyContent={"space-between"} mt={6} mb={12}>
 
-            {user && <Link to="/">
-            <AiFillHome size={24} />
-            </Link>
-            }
+            {user && (
+				<Link as={RouterLink} to='/'>
+					<AiFillHome size={24} />
+				</Link>
+			)}
+			{!user && (
+				<Link as={RouterLink} to={"/auth"} onClick={() => authScreenAtom("login")}>
+					Login
+				</Link>
+			)}
 
             <Image
             cursor={"pointer"}
@@ -24,10 +33,13 @@ const Header = () => {
             onClick={()=>toggleColorMode()}
             alt="logo" />
 
-            {user && <Link to={`/${user.username}`}>
-            <RxAvatar size={24}/>
-            </Link>
-            }
+{user && (
+				<Flex alignItems={"center"} gap={4}>
+					<Link as={RouterLink} to={`/${user.username}`}>
+						<RxAvatar size={24} />
+					</Link>
+				</Flex>
+			)}
 
         </Flex>
     )
