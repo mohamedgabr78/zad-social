@@ -26,7 +26,7 @@ function LogoutButton() {
                 setUser(null)
             }
         } catch (error) {
-            console.log(error)
+            showToast('Error', error, 'error')
         }
     }
 

@@ -21,9 +21,7 @@ const Header = () => {
 				</Link>
 			)}
 			{!user && (
-				<Link as={RouterLink} to={"/auth"} onClick={() => authScreenAtom("login")}>
-					Login
-				</Link>
+				<Link as={RouterLink} to={"/auth"} onClick={() => authScreenAtom("login")} />
 			)}
 
             <Image

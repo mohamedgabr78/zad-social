@@ -18,7 +18,6 @@ const HomePage = () => {
                 const data = await response.json()
                 if(data.error) showToast("Error", data.error, "error")
                 setPosts(data)
-                console.log(data)
             }
 
             catch (error) {
