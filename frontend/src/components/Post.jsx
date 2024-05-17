@@ -8,7 +8,6 @@ import {formatDistanceToNow} from 'date-fns'
 
 const Post = ({post,postedBy}) => {
 
-    const [liked, setLike] = useState(false);
     const [user, setUser] = useState({});
     // Custom Hooks
     const showToast = useShowToast()
@@ -42,10 +41,11 @@ const Post = ({post,postedBy}) => {
                     }}/>
                     <Box w={1} h={'full'} bg={'gray.light'} my={2}></Box>
                     <Box position={"relative"} w={'full'}>
-                        {post.likes?.map((like, index) => (
-                            <Avatar key={index} size={'xs'} src={like.profilePic} name={like.username} position={"absolute"} left={index * 10 + 'px'} padding={'2px'} top={0}/>
-                        ))                        
-                        }</Box>
+                        {post.replies.length === 0 && <Text fontSize={"sm"} color={'gray.light'} display={'flex'} justifyContent={'center'}>🥱</Text>}
+                        {post.replies[0] && <Avatar size={'xs'} src={post.replies[0].profilePic} name={post.replies[0].username} position={"absolute"} left={'11px'} padding={'2px'} top={0}/>}
+                        {post.replies[1] && <Avatar size={'xs'} src={post.replies[1].profilePic} name={post.replies[1].username} position={"absolute"} right={'-5px'} padding={'2px'} bottom={'0px'}/>}                  
+                        {post.replies[2] && <Avatar size={'xs'} src={post.replies[2].profilePic} name={post.replies[2].username} position={"absolute"} left={'-4px'} padding={'2px'} bottom={'0px'}/>}                  
+                    </Box>
                 </Flex>
                 <Flex flexDirection={"column"} flex={1} gap={2}>
                     <Flex justifyContent={"space-between"} w={'full'}>
@@ -66,13 +66,8 @@ const Post = ({post,postedBy}) => {
                     </Box>
                     )}
                     <Flex gap={3} my={1}>
-                        <Actions liked={liked} setLike={setLike}/>
+                        <Actions post={post}/>
                     </Flex> 
-                    <Flex gap={2} alignItems={'center'}>
-                        <Text fontSize={"sm"} color={'gray.light'}>{post.replies.length} replies</Text>
-                        <Box w={0.5} h={0.5} bg={'gray.light'} borderRadius={'full'}></Box>
-                        <Text fontSize={"sm"} color={'gray.light'}>{post.likes.length} likes</Text>
-                    </Flex>  
                 </Flex>
             </Flex>
             </Link>

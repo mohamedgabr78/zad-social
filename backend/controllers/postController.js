@@ -75,36 +75,32 @@ const deletePost = async (req, res) => {
 
 
 const likeUnlikePost = async (req, res) => {
-    try {
+	try {
+		const { id: postId } = req.params;
+		const userId = req.user._id;
 
-        const {id: postId} = req.params;
-        const userId = req.user._id;
-        const post = await Post.findById(postId);
+		const post = await Post.findById(postId);
 
-        const userLiked = post.likes.includes(userId);
+		if (!post) {
+			return res.status(404).json({ error: "Post not found" });
+		}
 
-        if(!post){
-            await res.status(404).json({ error: 'Post not found' });
-        }
+		const userLikedPost = post.likes.includes(userId);
 
-        if(userLiked){
-           await Post.updateOne({_id: postId}, { $pull: { likes: userId } });
-           res.status(200).json(post.likes);
-        }
-        else {
-            post.likes.push(userId);
-            await post.save();
-            res.status(200).json({message: 'Post liked successfully'});
-        }
-
-
-        await post.save();
-        res.status(200).json(post.likes);
-
-    }catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
+		if (userLikedPost) {
+			// Unlike post
+			await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
+			res.status(200).json({ message: "Post unliked successfully" });
+		} else {
+			// Like post
+			post.likes.push(userId);
+			await post.save();
+			res.status(200).json({ message: "Post liked successfully" });
+		}
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+};
 
 
 const replyToPost = async (req, res) =>{
