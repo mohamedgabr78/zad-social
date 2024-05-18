@@ -8,7 +8,7 @@ const HomePage = () => {
 
     const showToast = useShowToast()
     const [posts, setPosts] = useState([])
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const getFeedPosts = async () => {

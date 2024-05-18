@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Flex, Avatar, Box,Text, Image } from "@chakra-ui/react"
 import { BsThreeDots } from "react-icons/bs";
-import Actions from "../components/Actions";
+import Actions from "../components/postActions/Actions";
 
 const PostPage = ({
     likes,
