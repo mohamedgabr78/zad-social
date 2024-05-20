@@ -11,7 +11,7 @@ const UserHeader = ({user}) => {
 
     const showToast = useShowToast()
     const currentUser = useRecoilValue(userAtom) // logged in user
-    const [following, setFollowing] = useState(user.followers.includes(currentUser._id))
+    const [following, setFollowing] = useState(user.followers.includes(currentUser?._id))
     const [uptating, setUpdating] = useState(false)
 
 
@@ -52,10 +52,10 @@ const UserHeader = ({user}) => {
             }
             if(following){
                 showToast('Success', `Unfollowed ${user.name}`, 'success')
-                user.followers = user.followers.filter(follower => follower !== currentUser._id)
+                user.followers = user.followers.filter(follower => follower !== currentUser?._id)
             }else{
                 showToast('Success', `Followed ${user.name}`, 'success')
-                user.followers.push(currentUser._id)
+                user.followers.push(currentUser?._id)
             }
             setFollowing(!following)
         }
@@ -90,7 +90,7 @@ const UserHeader = ({user}) => {
                 </Box>
             </Flex>
             <Text fontSize={"sm"}>{user.bio}</Text>
-            {currentUser._id === user._id ? (
+            {currentUser?._id === user._id ? (
             <Link to={"/update"}>
             <Button colorScheme={"blue"} size={"sm"}>Update Profile</Button>
             </Link>

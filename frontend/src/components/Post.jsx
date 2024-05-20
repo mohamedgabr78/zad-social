@@ -1,15 +1,45 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Flex, Avatar, Box, Text, Image } from "@chakra-ui/react";
 import Actions from "./postActions/Actions";
 import useShowToast from "../hooks/useShowToast";
 import { Link, useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from 'date-fns';
+import { MdDeleteForever } from "react-icons/md";
+import { useRecoilValue } from "recoil";
+import { userAtom } from "../atoms";
+
 
 const Post = ({ post, postedBy }) => {
     const [user, setUser] = useState({});
     const [replies, setReplies] = useState(post.replies);
     const showToast = useShowToast();
     const navigate = useNavigate();
+    const currentUser = useRecoilValue(userAtom);
+
+    const handleDeletePost = (async (e) => {
+        try {
+            e.preventDefault();
+            if (!window.confirm("Are you sure you want to delete this post?")) return;
+            const response = await fetch(`/api/posts/delete/${post._id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
+            const data = await response.json();
+            if (data.error) {
+                showToast("Error", data.error, "error")
+                return;
+            }else{
+                showToast("Success", "Post deleted successfully", "success");
+                
+            }
+        } catch (error) {
+            showToast("Error", error, "error");
+        }
+    })
+
 
     useEffect(() => {
         const fetchOwner = async () => {
@@ -68,6 +98,9 @@ const Post = ({ post, postedBy }) => {
                                 <Text fontSize={"sm"} color={'gray.light'}>{
                                     formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })
                                 }</Text>
+                                {currentUser?._id === post.postedBy && (
+                                    <MdDeleteForever onClick={handleDeletePost}/>
+                                )}
                             </Flex>
                         </Flex>
                         <Text fontSize={"sm"}>{post.text}</Text>

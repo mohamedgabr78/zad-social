@@ -14,8 +14,6 @@ import { useRecoilValue } from 'recoil';
 import { useRecoilState } from 'recoil';
 import { useParams } from 'react-router-dom';
 
-
-
 const MAX_CHAR = 300;
 
 function CreatePost() {
@@ -86,7 +84,7 @@ function CreatePost() {
 				onClick={onOpen}
 				size={{ base: "sm", sm: "md" }}
 			>
-				<AddIcon />
+				<AddIcon m={1}/> POST
 			</Button>
         <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
