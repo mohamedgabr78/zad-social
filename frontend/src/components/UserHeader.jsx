@@ -24,7 +24,12 @@ const UserHeader = ({user}) => {
                 isClosable: true,
               })
           }, function(err) {
-            console.error('Async: Could not copy text: ', err);
+            showToast({
+                title: "Failed to copy",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+              })
           });
     }
 

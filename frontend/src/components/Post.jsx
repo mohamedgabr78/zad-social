@@ -1,12 +1,13 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { Flex, Avatar, Box, Text, Image } from "@chakra-ui/react";
 import Actions from "./postActions/Actions";
 import useShowToast from "../hooks/useShowToast";
 import { Link, useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from 'date-fns';
-import { MdDeleteForever } from "react-icons/md";
+import { DeleteIcon } from "@chakra-ui/icons";
 import { useRecoilValue } from "recoil";
 import { userAtom } from "../atoms";
+import useDeletePost from "../hooks/useDeletePost";
 
 
 const Post = ({ post, postedBy }) => {
@@ -15,30 +16,7 @@ const Post = ({ post, postedBy }) => {
     const showToast = useShowToast();
     const navigate = useNavigate();
     const currentUser = useRecoilValue(userAtom);
-
-    const handleDeletePost = (async (e) => {
-        try {
-            e.preventDefault();
-            if (!window.confirm("Are you sure you want to delete this post?")) return;
-            const response = await fetch(`/api/posts/delete/${post._id}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-            const data = await response.json();
-            if (data.error) {
-                showToast("Error", data.error, "error")
-                return;
-            }else{
-                showToast("Success", "Post deleted successfully", "success");
-                
-            }
-        } catch (error) {
-            showToast("Error", error, "error");
-        }
-    })
+    const handleDeletePost = useDeletePost();
 
 
     useEffect(() => {
@@ -99,7 +77,7 @@ const Post = ({ post, postedBy }) => {
                                     formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })
                                 }</Text>
                                 {currentUser?._id === post.postedBy && (
-                                    <MdDeleteForever onClick={handleDeletePost}/>
+                                    <DeleteIcon onClick={(e) => handleDeletePost(e, post._id)} cursor={'pointer'}/>
                                 )}
                             </Flex>
                         </Flex>

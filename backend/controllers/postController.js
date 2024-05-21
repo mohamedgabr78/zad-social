@@ -113,7 +113,9 @@ const replyToPost = async (req, res) =>{
     try{
             const { id: postId } = req.params;
             const userId = req.user._id;
-            const { text, profilePic, username } = req.body;
+            const { text } = req.body;
+            const {profilePic,username} = req.user;
+            
 
             if(!text, !userId){
                 return res.status(400).json({ error: 'Test and Id are required' });
@@ -128,8 +130,8 @@ const replyToPost = async (req, res) =>{
             const reply = {
                 userId,
                 text,
-                userprofilePic: req.user.profilePic,
-                username: req.user.username
+                userprofilePic: profilePic,
+                username,
             }
 
             post.replies.push(reply);

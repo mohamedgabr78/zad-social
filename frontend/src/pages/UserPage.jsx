@@ -4,31 +4,16 @@ import { useParams } from 'react-router-dom';
 import useShowToast from '../hooks/useShowToast';
 import { Flex, Spinner } from '@chakra-ui/react';
 import Post from '../components/Post';
+import useGetProfile from '../hooks/useGetProfile';
 
 const UserPage = () => {
-  const [users, setUsers] = useState(null);
+  const { user, loading } = useGetProfile();
   const { username } = useParams();
   const showToast = useShowToast();
-  const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
   const [fetchingPosts, setFetchingPosts] = useState(true);  
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await fetch(`/api/users/profile/${username}`);
-        const data = await res.json();
-        if (data.error) {
-          showToast('Error', data.error, 'error');
-          return;
-        }
-        setUsers(data);
-      } catch (error) {
-        showToast('Error', error.message, 'error');
-      } finally {
-        setLoading(false);
-      }
-    };
 
     const getUserPosts = async () => {
 			setFetchingPosts(true);
@@ -44,13 +29,9 @@ const UserPage = () => {
         showToast('Error', error.message, 'error');
         setPosts([]);
       } finally {
-        setLoading(false);
         setFetchingPosts(false);
       }
     };
-
-    setLoading(true); // Start loading before fetching data
-    getUser();
     getUserPosts();
   }, [username, showToast]);
 
@@ -62,11 +43,11 @@ const UserPage = () => {
     );
   }
 
-  if (!users && !loading) return <h1>User not found</h1>;
+  if (!user && !loading) return <h1>User not found</h1>;
 
   return (
     <>
-      {users && <UserHeader user={users} />}
+      {user && <UserHeader user={user} />}
 
       {!fetchingPosts && posts?.length === 0 && (
         <Flex justifyContent='center'>

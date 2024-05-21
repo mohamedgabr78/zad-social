@@ -19,7 +19,7 @@ const Actions = ({ post }) => {
 	const showToast = useShowToast()
 	const [posts, setPosts] = useState(post);
     const { isOpen, onOpen, onClose } = useDisclosure()
-
+	
 
 	const handleLike = async() => {
 		if (!user) return showToast("Error", "You must be logged in to like a post", "error");
@@ -35,12 +35,11 @@ const Actions = ({ post }) => {
 			});
 				const data = await res.json();
 				if (data.error) return showToast("Error", data.error, "error");
-				console.log(data)
 	
 				if (!liked) {
-					setPosts({ ...posts, likes: [...posts.likes, user._id] });
+					setPosts({ ...posts, likes: [...posts.likes, user[0]._id] });
 				} else {
-					setPosts({ ...posts, likes: posts.likes.filter((id) => id !== user._id) });
+					setPosts({ ...posts, likes: posts.likes.filter((id) => id !== user[0]._id) });
 				}
 	
 				setLiked(!liked);
