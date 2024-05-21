@@ -11,6 +11,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { Spinner } from "@chakra-ui/spinner";
 import { formatDistanceToNow } from "date-fns";
 import useDeletePost from "../hooks/useDeletePost";
+import Comment from "./Comment";
 
 const PostPage = () => {
 	const { user, loading } = useGetProfile();
@@ -108,20 +109,10 @@ const PostPage = () => {
 
 			<Divider my={4} />
 			{currentPost.replies.map((reply) => (
-                <>
-                    <Flex gap={4} py={2} my={2} w={"full"}>
-                        <Avatar src={reply.profilePic} size={"sm"} />
-                        <Flex gap={1} w={"full"} flexDirection={"column"}>
-                            <Flex w={"full"} justifyContent={"space-between"} alignItems={"center"}>
-                                <Text fontSize='sm' fontWeight='bold'>
-                                    {reply.username}
-                                </Text>
-                            </Flex>
-                            <Text>{reply.text}</Text>
-                        </Flex>
-                    </Flex>
-                    <Divider />
-                </>
+                <Comment
+                key={reply._id}
+                reply={reply}
+                lastReply={currentPost.replies[currentPost.replies.length - 1]._id === reply._id} />
 			))}
 		</>
 	);
