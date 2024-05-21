@@ -22,7 +22,7 @@ const Actions = ({ post }) => {
 	
 
 	const handleLike = async() => {
-		if (!user) return showToast("Error", "You must be logged in to like a post", "error");
+		if (user[0]===null) return showToast("Error", "You must be logged in to like a post", "error");
 		if (isLiking) return;
 		setIsLiking(true);
 

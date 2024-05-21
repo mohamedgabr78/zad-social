@@ -1,21 +1,18 @@
 import { useState } from "react";
-
 import {
-	Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button
-	, FormControl, Input
+	Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, Input
 } from "@chakra-ui/react";
 import useShowToast from "../../hooks/useShowToast";
 
-const Reply = ({ user, posts, setPosts, post, isOpen, onClose }) => {
+const Reply = ({user, posts, setPosts, post, isOpen, onClose }) => {
 
-    const showToast = useShowToast()
-    const [reply, setReply] = useState('')
-    const [isReplying, setIsReplying] = useState(false)
+	const showToast = useShowToast();
+	const [reply, setReply] = useState('');
+	const [isReplying, setIsReplying] = useState(false);
+	const currentUser = user[0];
 
-
-
-    const handleReply = async() => {
-		if (!user) return showToast("Error", "You must be logged in to reply to a post", "error");
+	const handleReply = async () => {
+		if (!currentUser) return showToast("Error", "You must be logged in to reply to a post", "error");
 		if (!reply) return showToast("Error", "Reply cannot be empty", "error");
 		if (isReplying) return;
 		setIsReplying(true);
@@ -30,7 +27,11 @@ const Reply = ({ user, posts, setPosts, post, isOpen, onClose }) => {
 			});
 			const data = await res.json();
 			if (data.error) return showToast("Error", data.error, "error");
-			setPosts({ ...posts, replies: [...posts.replies, data] });
+
+			const updatedPosts = posts.map(p => 
+				p._id === post._id ? { ...p, replies: [...p.replies, data] } : p
+			);
+			setPosts(updatedPosts);
 			setReply("");
 			onClose();
 		} catch (error) {
@@ -40,30 +41,29 @@ const Reply = ({ user, posts, setPosts, post, isOpen, onClose }) => {
 		}
 	}
 
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader>{`reply to ${user[0].name} post`}</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody pb={6}>
-						<FormControl>
-							<Input
-								placeholder='Reply goes here..'
-								value={reply}
-								onChange={(e) => setReply(e.target.value)}
-							/>
-						</FormControl>
-					</ModalBody>
+	return (
+		<Modal isOpen={isOpen} onClose={onClose}>
+			<ModalOverlay />
+			<ModalContent>
+				<ModalHeader>Reply to this post</ModalHeader>
+				<ModalCloseButton />
+				<ModalBody pb={6}>
+					<FormControl>
+						<Input
+							placeholder='Reply goes here..'
+							value={reply}
+							onChange={(e) => setReply(e.target.value)}
+						/>
+					</FormControl>
+				</ModalBody>
+				<ModalFooter>
+					<Button colorScheme='blue' size={"sm"} mr={3} isLoading={isReplying} onClick={handleReply}>
+						Reply
+					</Button>
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
+	);
+};
 
-					<ModalFooter>
-						<Button colorScheme='blue' size={"sm"} mr={3} isLoading={isReplying} onClick={handleReply}>
-							Reply
-						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
-  )
-}
-
-export default Reply
+export default Reply;
