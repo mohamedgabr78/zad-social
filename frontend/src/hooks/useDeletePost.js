@@ -1,10 +1,15 @@
 import useShowToast from './useShowToast'
+import { useSetRecoilState } from 'recoil'
+import { postsAtom } from '../atoms'
+import { useNavigate } from "react-router-dom";
+import { useCallback } from 'react';
 
 function useDeletePost() {
     const showToast = useShowToast();
+    const setPosts = useSetRecoilState(postsAtom)
+    const navigate = useNavigate();
 
-
-    const handleDeletePost = (async (e, postId) => {
+    const handleDeletePost = useCallback(async (e, postId, username) => {
         try {
             e.preventDefault();
             if (!window.confirm("Are you sure you want to delete this post?")) return;
@@ -21,15 +26,18 @@ function useDeletePost() {
                 return;
             }else{
                 showToast("Success", "Post deleted successfully", "success");
+                setPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+                if (username) {
+                    navigate(`/${username}`);
+                }
                 
             }
         } catch (error) {
             showToast("Error", error, "error");
         }
-    })
-  return (
-    handleDeletePost
-  )
+    }, [showToast, setPosts, navigate]);
+
+  return handleDeletePost
 }
 
 export default useDeletePost

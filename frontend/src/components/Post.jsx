@@ -77,7 +77,7 @@ const Post = ({ post, postedBy }) => {
                                     formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })
                                 }</Text>
                                 {currentUser?._id === post.postedBy && (
-                                    <DeleteIcon onClick={(e) => handleDeletePost(e, post._id)} cursor={'pointer'}/>
+                                    <DeleteIcon onClick={(e) => handleDeletePost(e, post._id,user.username)} cursor={'pointer'}/>
                                 )}
                             </Flex>
                         </Flex>

@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { postsAtom, userAtom } from "../atoms";
-import { useNavigate } from "react-router-dom";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { Spinner } from "@chakra-ui/spinner";
 import { formatDistanceToNow } from "date-fns";
@@ -19,8 +18,7 @@ const PostPage = () => {
 	const showToast = useShowToast();
 	const { pid } = useParams();
 	const currentUser = useRecoilValue(userAtom);
-	const navigate = useNavigate();
-    const deletePost = useDeletePost();
+    const handleDeletePost = useDeletePost();
 
 	const currentPost = posts[0];
 
@@ -41,16 +39,6 @@ const PostPage = () => {
 		};
 		getPost();
 	}, [showToast, pid, setPosts]);
-
-
-    const handleDeletePost = async (e) => {
-        try {
-            await deletePost(e,currentPost._id);
-			navigate(`/${user.username}`);
-        } catch (error) {
-            showToast("Error", error.message, "error");
-        }
-    };
 
 	if (!user && loading) {
 		return (
@@ -80,7 +68,7 @@ const PostPage = () => {
 					</Text>
 
 					{currentUser?._id === user._id && (
-						<DeleteIcon size={20} onClick={(e) => handleDeletePost(e)} cursor={'pointer'}/>
+						<DeleteIcon size={20} onClick={(e) => handleDeletePost(e,currentPost._id,user.username)} cursor={'pointer'}/>
 					)}
 				</Flex>
 			</Flex>
