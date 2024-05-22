@@ -25,8 +25,8 @@ const UserHeader = ({user}) => {
               })
           }, function(err) {
             showToast({
-                title: "Failed to copy",
-                status: "error",
+                title: err,
+                status: "err",
                 duration: 2000,
                 isClosable: true,
               })
@@ -107,15 +107,17 @@ const UserHeader = ({user}) => {
                 <Flex gap={2} alignItems={"center"}>
                     <Text color={"gray.light"}>{user.followers.length} Followers</Text>
                     <Box w={1} h={1} bg={"gray.light"} borderRadius={"full"}></Box>
-                    <Link color={"gray.light"} to={"https://www.linkedin.com/in/mohamed-gabr78/"}>LinkedIn.com</Link>
-                    <Link color={"gray.light"} to={"https://github.com/mohamedgabr78"}>GitHub.com</Link>
                 </Flex>
                 <Flex gap={2}>
                     <Box>
-                        <BsLinkedin size={24} cursor={"pointer"}/>
+                        <a href={"https://www.linkedin.com/in/mohamed-gabr78/"} target={"_blank"} rel={"noreferrer"}>
+                        <BsLinkedin size={24} cursor={"pointer"} />
+                        </a>
                     </Box>
                     <Box>
+                        <a href={"https://github.com/mohamedgabr78"} target={"_blank"} rel={"noreferrer"}>
                         <BsGithub size={24} cursor={"pointer"} />
+                        </a>
                     </Box>
                     <Box>
                         <Menu>

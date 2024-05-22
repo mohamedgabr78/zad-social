@@ -84,7 +84,7 @@ function CreatePost() {
 				onClick={onOpen}
 				size={{ base: "sm", sm: "md" }}
 			>
-				<AddIcon m={1}/> POST
+				<AddIcon />
 			</Button>
         <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
