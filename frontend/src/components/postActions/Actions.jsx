@@ -9,6 +9,7 @@ import useShowToast from "../../hooks/useShowToast";
 import { useRecoilState } from "recoil";
 import { userAtom } from "../../atoms/userAtoms";
 import Reply from "./Reply";
+import { postsAtom } from "../../atoms";
 
 
 const Actions = ({ post }) => {
@@ -17,7 +18,7 @@ const Actions = ({ post }) => {
 	const [liked, setLiked] = useState(post?.likes.includes(user[0]?._id));
 	const [isLiking, setIsLiking] = useState(false);
 	const showToast = useShowToast()
-	const [posts, setPosts] = useState(post);
+	const [posts, setPosts] = useRecoilState(postsAtom)
     const { isOpen, onOpen, onClose } = useDisclosure()
 	
 
@@ -36,12 +37,17 @@ const Actions = ({ post }) => {
 				const data = await res.json();
 				if (data.error) return showToast("Error", data.error, "error");
 	
-				if (!liked) {
-					setPosts({ ...posts, likes: [...posts.likes, user[0]._id] });
-				} else {
-					setPosts({ ...posts, likes: posts.likes.filter((id) => id !== user[0]._id) });
-				}
-	
+				const updatedPost = posts.map((p) => {
+					if (p._id === post._id) {
+						if (!liked) {
+							return { ...p, likes: [...p.likes, user[0]._id] };
+						} else {
+							return { ...p, likes: p.likes.filter((id) => id !== user[0]._id) };
+						}
+					}
+					return p;
+				});
+				setPosts(updatedPost);
 				setLiked(!liked);
 			} catch (error) {
 				showToast("Error", error.message, "error");
@@ -95,9 +101,9 @@ const Actions = ({ post }) => {
 
 		</Flex>
 				<Flex gap={2} alignItems={'center'}>
-                        <Text fontSize={"sm"} color={'gray.light'}>{posts?.replies.length} replies</Text>
+                        <Text fontSize={"sm"} color={'gray.light'}>{post?.replies.length} replies</Text>
                         <Box w={0.5} h={0.5} bg={'gray.light'} borderRadius={'full'}></Box>
-                        <Text fontSize={"sm"} color={'gray.light'}>{posts?.likes.length} likes</Text>
+                        <Text fontSize={"sm"} color={'gray.light'}>{post?.likes.length} likes</Text>
                 </Flex>  
 
 				<Reply user={user} posts={posts} setPosts={setPosts} post={post} isOpen={isOpen} onClose={onClose}/>

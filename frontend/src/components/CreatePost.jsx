@@ -65,6 +65,7 @@ function CreatePost() {
 			}
 			onClose();
 			setPostText("");
+			setPosts((prev) => [data, ...prev]);
 			setImgUrl("");
 		} catch (error) {
 			showToast("Error", error, "error");

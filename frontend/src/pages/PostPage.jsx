@@ -54,17 +54,17 @@ const PostPage = () => {
 		<>
 			<Flex>
 				<Flex w={"full"} alignItems={"center"} gap={3}>
-					<Avatar src={user.profilePic} size={"md"} name='Mark Zuckerberg' />
+					<Avatar src={user?.profilePic} size={"md"} name={user?.username} />
 					<Flex>
 						<Text fontSize={"sm"} fontWeight={"bold"}>
-							{user.username}
+							{user?.username}
 						</Text>
 						<Image src='/verified.png' w='4' h={4} ml={4} />
 					</Flex>
 				</Flex>
 				<Flex gap={4} alignItems={"center"}>
 					<Text fontSize={"xs"} width={36} textAlign={"right"} color={"gray.light"}>
-						{formatDistanceToNow(new Date(currentPost.createdAt))} ago
+						{formatDistanceToNow(new Date(currentPost?.createdAt))} ago
 					</Text>
 
 					{currentUser?._id === user._id && (
@@ -75,7 +75,7 @@ const PostPage = () => {
 
 			<Text my={3}>{currentPost.text}</Text>
 
-			{currentPost.img && (
+			{currentPost?.img && (
 				<Box borderRadius={6} overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"}>
 					<Image src={currentPost.img} w={"full"} />
 				</Box>
@@ -98,6 +98,7 @@ const PostPage = () => {
 			<Divider my={4} />
 			{currentPost.replies.map((reply) => (
                 <Comment
+				post={currentPost}
                 key={reply._id}
                 reply={reply}
                 lastReply={currentPost.replies[currentPost.replies.length - 1]._id === reply._id} />
