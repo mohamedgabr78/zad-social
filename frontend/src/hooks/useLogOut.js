@@ -1,14 +1,12 @@
-import { Button } from '@chakra-ui/react'
 import { useSetRecoilState } from 'recoil'
 import { userAtom } from '../atoms/userAtoms'
-import useShowToast from '../hooks/useShowToast'
-import { GrLogout } from "react-icons/gr";
+import useShowToast from './useShowToast'
 
-function LogoutButton() {
-
+function useLogOut() {
     const setUser = useSetRecoilState(userAtom)
     const showToast = useShowToast()
-    const handleLogout = async() => {
+
+    const logout = async() => {
         try {
             const res = await fetch('/api/users/logout', {
                 method: 'POST',
@@ -30,11 +28,9 @@ function LogoutButton() {
         }
     }
 
-  return (
-    <Button colorScheme='red' onClick={handleLogout} position={'fixed'} top={'30px'} right={'30px'}>
-        <GrLogout size={20}/> 
-    </Button>
-  )
+  return(
+    logout
+)
 }
 
-export default LogoutButton
+export default useLogOut
