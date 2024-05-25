@@ -24,7 +24,7 @@ import usePreviewImg from '../hooks/usePreviewImg';
     const [inputs, setInputs] = useState({
         username: user.username,
         email: user.email,
-        fullName: user.name,
+        name: user.name,
         bio: user.bio,
         password: '',
     });
@@ -119,7 +119,7 @@ import usePreviewImg from '../hooks/usePreviewImg';
               placeholder="fullName"
               _placeholder={{ color: 'gray.500' }}
               type="text"
-              value={inputs.fullName} onChange={e=>{setInputs({...inputs, fullName:e.target.value})}}/>
+              value={inputs.name} onChange={e=>{setInputs({...inputs, name:e.target.value})}}/>
           </FormControl>
           <FormControl id="bio">
             <FormLabel>Bio</FormLabel>

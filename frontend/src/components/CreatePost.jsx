@@ -61,11 +61,10 @@ function CreatePost() {
 			}
 			showToast("Success", "Post created successfully", "success");
 			if (username === user.username) {
-				setPosts([data, ...posts]);
+				setPosts((prev) => [data, ...prev]);
 			}
 			onClose();
 			setPostText("");
-			setPosts((prev) => [data, ...prev]);
 			setImgUrl("");
 		} catch (error) {
 			showToast("Error", error, "error");
