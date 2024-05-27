@@ -7,6 +7,7 @@ import { Link as RouterLink } from "react-router-dom"
 import { authScreenAtom } from "../atoms"
 import { GrLogout } from "react-icons/gr";
 import useLogOut from "../hooks/useLogOut"
+import { BsFillChatFill } from "react-icons/bs"
 
 
 
@@ -49,8 +50,11 @@ const Header = () => {
 					<Link as={RouterLink} to={`/${user.username}`}>
 						<RxAvatar size={24} />
 					</Link>
-                    <Button colorScheme="blue" variant="solid" size="sm" onClick={logOut}>
-                    <GrLogout size={24} />
+					<Link as={RouterLink} to={`/chat`}>
+						<BsFillChatFill size={20} />
+					</Link>
+                    <Button colorScheme="blue" variant="solid" size="xs" onClick={logOut} mt={1}>
+                    <GrLogout size={15} />
                     </Button>
 				</Flex>
 			)}
