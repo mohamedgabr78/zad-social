@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
+import messageRoutes from './routes/messageRoutes.js';
 import cors from 'cors';
 import {v2 as cloudinary} from 'cloudinary';
 
@@ -34,6 +35,7 @@ app.use(cors()); // to allow cross-origin requests
 // routes
 app.use('/api/users', userRoutes); // all routes in userRoutes will start with /api/users
 app.use('/api/posts', postRoutes); // all routes in postRoutes will start with /api/posts
+app.use('/api/messages', messageRoutes); // all routes in messageRoutes will start with /api/messages
 
 
 app.listen(PORT, () => {
