@@ -1,9 +1,10 @@
 import { Avatar, Flex, Text, Image, Divider, SkeletonCircle, Skeleton } from '@chakra-ui/react'
 import Message from './Message'
+import MessageInput from './MessageInput'
 
 function MessageContainer() {
   return (
-    <Flex flex={70} borderRadius={"md"} p={2} flexDir={"column"} bg={"gray.600"} >
+    <Flex borderRadius={"md"} p={2} flexDir={"column"} bg={"gray.600"} >
         <Flex flexDir={"column"} p={2} overflowY={"auto"} maxH={"80vh"}>
             {/* Messages */}
 			<Flex w={"full"} h={12} alignItems={"center"} gap={2}>
@@ -44,6 +45,7 @@ function MessageContainer() {
             <Message ownMessage={false}/>
             <Message ownMessage={false}/>
         </Flex>
+        <MessageInput/>
     </Flex>
   )
 }
