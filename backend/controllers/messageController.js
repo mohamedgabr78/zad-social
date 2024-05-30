@@ -83,6 +83,11 @@ const getConversations = async (req, res) => {
     try {
         const conversations = await Conversation.find({ members: userId }).populate('members', ['username', 'profilePic']);
 
+        conversations.forEach(conversation => {
+            conversation.members = conversation.members.filter(member => member._id.toString() !== userId.toString());
+        }
+        );
+
         return res.status(200).json(conversations);
 
     } catch (error) {

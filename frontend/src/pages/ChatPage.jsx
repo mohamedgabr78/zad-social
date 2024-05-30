@@ -3,8 +3,38 @@ import { SearchIcon } from '@chakra-ui/icons'
 import Conversation from '../components/Conversation';
 import { GiConversation } from 'react-icons/gi';
 import MessageContainer from '../components/MessageContainer';
+import { useEffect, useState } from 'react';
+import useShowToast from '../hooks/useShowToast';
+import { useRecoilState } from 'recoil';
+import { conversationAtom } from '../atoms/messagesAtoms';
 
 function ChatPage() {
+	
+	const showToast = useShowToast()
+	const [loading, setLoading] = useState(true);
+	const [conversations, setConversations] = useRecoilState(conversationAtom);
+
+	useEffect(() => {
+		const getConversations = async () => {
+			try {
+				const res = await fetch("/api/messages/conversations");
+				const data = await res.json();
+				if (data.error) {
+					showToast(data.error, "error");
+				}
+				setConversations(data);
+			}
+			catch (error) {
+				showToast("An error occurred", "error");
+			}finally {
+				setLoading(false);
+		}
+		};
+		getConversations();
+	}
+	, [showToast, setConversations]);
+
+
   return (
     <Box
 			position={"absolute"}
@@ -34,7 +64,7 @@ function ChatPage() {
 							</Button>
 						</Flex>
 					</form>
-                    {true && (
+                    {loading && (
                         [0,1,2,3,4].map((i) => (
                             <Flex key={i} p={2}
                             gap={4}
@@ -51,7 +81,10 @@ function ChatPage() {
                             </Flex>
                         ))
                     )}
-                    <Conversation/>
+					{!loading && (
+					conversations.map((conversation) =>
+					<Conversation key={conversation._id} conversation={conversation}/>)
+					)}
 				</Flex>
                 { false && 
 					<Flex
@@ -72,6 +105,8 @@ function ChatPage() {
 			</Flex>
 		</Box>
 	);
-};
+}
 
 export default ChatPage;
+
+
