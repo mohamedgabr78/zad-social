@@ -65,7 +65,7 @@ const getMessages = async (req, res) => {
 
         if(!conversation) return res.status(404).json({ error: 'Conversation not found' });
 
-        const messages = await Message.find({ conversationId: conversation._id });
+        const messages = await Message.find({ conversationId: conversation._id }).sort({ createdAt: 1 });
 
         const sortedMessages = messages.sort((a, b) => a.createdAt - b.createdAt);
 
@@ -95,19 +95,21 @@ const getConversations = async (req, res) => {
     }
 }
 
-const deleteMessage = async (req, res) => {
+const deleteConversation = async (req, res) => {
+
     const { id } = req.params;
+    const userId = req.user._id;
 
     try {
-        const message = await Message.findById(id);
+        const conversation = await Conversation.findById(id);
 
-        if (!message) return res.status(404).json({ error: 'Message not found' });
+        if (!conversation) return res.status(404).json({ error: 'Conversation not found' });
 
-        if (message.sender.toString() !== req.user._id) return res.status(401).json({ error: 'You are not authorized to delete this message' });
+        if (!conversation.members.includes(userId)) return res.status(403).json({ error: 'You are not authorized to delete this conversation' });
 
-        await message.delete();
+        await conversation.deleteOne();
 
-        return res.status(200).json({ message: 'Message deleted' });
+        return res.status(200).json({ message: 'Conversation deleted successfully' });
 
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -115,4 +117,4 @@ const deleteMessage = async (req, res) => {
 }
 
 
-export { sendMessage, getMessages, getConversations, deleteMessage };
+export { sendMessage, getMessages, getConversations, deleteConversation };

@@ -9,11 +9,8 @@ import {
 	useColorModeValue,
 } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
-import { userAtom } from "../atoms";
+import { userAtom, selectedConversationAtom } from "../atoms";
 import { BsCheck2All } from "react-icons/bs";
-import { selectedConversationAtom } from "../atoms/messagesAtoms";
-
-
 
 function Conversation(conversation) {
 
@@ -21,8 +18,7 @@ function Conversation(conversation) {
     const colorMode = useColorModeValue("gray.600", "gray.dark");
     const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
     const user = conversation.conversation.members[0];
-    const lastMessage = conversation.conversation.lastMessage;
-
+	const lastMessage = conversation.conversation.lastMessage;
 
   return (
     <Flex
@@ -61,8 +57,8 @@ function Conversation(conversation) {
                 </Text>
             <Text fontSize={"xs"} display={'flex'} alignItems={'center'} gap={1}>
                 {lastMessage.sender === currentUser[0]._id ? <BsCheck2All size={16}/> : ''}
-                {lastMessage.text.length > 15 ? lastMessage.text.slice(0, 15) + '...' : lastMessage.text    
-        }</Text>
+                {lastMessage.text.length > 15 ? lastMessage.text.slice(0, 15) + '...' : lastMessage.text}
+                </Text>
         </Stack>
     </Flex>
   )
