@@ -5,8 +5,8 @@ import { GiConversation } from 'react-icons/gi';
 import MessageContainer from '../components/MessageContainer';
 import { useEffect, useState } from 'react';
 import useShowToast from '../hooks/useShowToast';
-import { useRecoilState } from 'recoil';
-import { conversationAtom, selectedConversationAtom } from '../atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { conversationAtom, selectedConversationAtom, userAtom } from '../atoms';
 
 
 function ChatPage() {
@@ -15,6 +15,44 @@ function ChatPage() {
 	const [loading, setLoading] = useState(true);
 	const [conversations, setConversations] = useRecoilState(conversationAtom);
 	const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
+	const [searchText, setSearchText] = useState("");
+	const [searchLoading, setSearchLoading] = useState(false);
+	const currentUser = useRecoilValue(userAtom);
+
+	const handleSearch = async (e) => {
+		e.preventDefault();
+		setSearchLoading(true);
+		try {
+			const res = await fetch(`/api/users/profile/${searchText}`);
+			const searchedUser = await res.json();
+			if (searchedUser.error) {
+				showToast(searchedUser.error, "error");
+				return;
+			}
+
+			const messagingYourself = searchedUser._id === currentUser._id
+			if(messagingYourself) {
+				showToast("You can't message yourself", "error");
+				return;
+			}
+
+			const conversationExists = conversations.find(conversation => 
+				conversation.members[0]._id === searchedUser._id)
+			if(conversationExists){
+				setSelectedConversation({
+					_id: conversationExists._id,
+					userId: searchedUser._id,
+					username: searchedUser.username,
+					profilePic: searchedUser.profilePic
+				})
+			}
+		}
+		catch (error) {
+			showToast("An error occurred", "error");
+		}finally{
+			setSearchLoading(false);
+		}
+	}
 
 	useEffect(() => {
 		const getConversations = async () => {
@@ -35,7 +73,6 @@ function ChatPage() {
 		getConversations();
 	}
 	, [showToast, setConversations]);
-
 
   return (
     <Box
@@ -58,10 +95,10 @@ function ChatPage() {
 					<Text fontWeight={700}>
 						Your Conversations
 					</Text>
-					<form >
+					<form onSubmit={handleSearch}>
 						<Flex alignItems={"center"} gap={2}>
-							<Input placeholder='Search for a user'/>
-							<Button size={"sm"}>
+							<Input placeholder='Search for a user' onChange={(e)=>{setSearchText(e.target.value)}}/>
+							<Button size={"sm"} onClick={handleSearch} isLoading={searchLoading}>
 								<SearchIcon />
 							</Button>
 						</Flex>
