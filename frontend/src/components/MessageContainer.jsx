@@ -1,7 +1,7 @@
 import { Avatar, Flex, Text, Image, Divider, SkeletonCircle, Skeleton } from '@chakra-ui/react'
 import Message from './Message'
 import MessageInput from './MessageInput'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import useShowToast from '../hooks/useShowToast'
 import { useRecoilValue } from 'recoil'
 import { selectedConversationAtom, userAtom } from '../atoms/'
@@ -13,6 +13,7 @@ function MessageContainer() {
     const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState([]);
     const currentUser = useRecoilValue(userAtom);
+    const messagesEndRef = useRef(null);
 
 useEffect(() => {
     const getMessages = async () => {
@@ -33,6 +34,12 @@ useEffect(() => {
     getMessages();
 }
 , [showToast, selectedConversation.userId]);
+
+useEffect(() => {
+    if (!loading) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, loading]);
 
 
   return (
@@ -74,6 +81,7 @@ useEffect(() => {
             {!loading && messages.map((message) => (
                 <Message key={message._id} ownMessage={currentUser._id === message.sender} message={message} />
             ))}
+                    <div ref={messagesEndRef} />
         </Flex>
         <MessageInput setMessages={setMessages}/>
     </Flex>

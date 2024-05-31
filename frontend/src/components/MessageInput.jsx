@@ -9,7 +9,7 @@ function MessageInput({setMessages}) {
 
   const showToast = useShowToast()
   const selectedConversation = useRecoilValue(selectedConversationAtom);
-  const setConversation = useRecoilState(conversationAtom);
+  const [conversations, setConversations] = useRecoilState(conversationAtom);
   const [messageText, setMessageTest] = useState("");
 
   const sendMessage = async(e) => {
@@ -30,8 +30,22 @@ function MessageInput({setMessages}) {
       }
       setMessages((prev) => [...prev, data]);
 
-      setConversation(null);
-
+      setConversations((prev) => {
+        const newConversations = prev.map((conversation) => {
+          if (conversation._id === selectedConversation.conversationId) {
+            return {
+              ...conversation,
+              lastMessage: {
+                text: messageText,
+                sender: conversation.members[0] === selectedConversation.userId ? conversation.members[0] : conversation.members[1],
+              },
+            };
+          }
+          return conversation;
+        });
+        return newConversations;
+      });
+      
       setMessageTest("");
   }
     catch (error) {
