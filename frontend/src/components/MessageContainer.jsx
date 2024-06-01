@@ -5,8 +5,10 @@ import { useEffect, useState, useRef } from 'react'
 import useShowToast from '../hooks/useShowToast'
 import { useRecoilValue } from 'recoil'
 import { selectedConversationAtom, userAtom } from '../atoms/'
+import { DeleteIcon } from "@chakra-ui/icons";
 
-function MessageContainer() {
+
+function MessageContainer({handleDelete}) {
 
     const showToast = useShowToast()
     const selectedConversation = useRecoilValue(selectedConversationAtom);
@@ -14,8 +16,6 @@ function MessageContainer() {
     const [messages, setMessages] = useState([]);
     const currentUser = useRecoilValue(userAtom);
     const messagesEndRef = useRef(null);
-
-    console.log(selectedConversation);
 
 useEffect(() => {
     const getMessages = async () => {
@@ -47,7 +47,7 @@ useEffect(() => {
 
   return (
     <Flex borderRadius={"md"} p={2} flexDir={"column"} bg={"gray.600"} w={'full'} m={2}>
-        <Flex flexDir={"column"} p={2} overflowY={"auto"} maxH={"80vh"}>
+        <Flex flexDir={"row"} p={2} overflowY={"auto"} maxH={"80vh"}>
             {/* Messages */}
 			<Flex w={"full"} h={7} alignItems={"center"} gap={2}>
 				<Avatar src={selectedConversation.profilePic} size={"sm"} />
@@ -56,6 +56,10 @@ useEffect(() => {
 					<Image src='/verified.png' w={4} h={4} ml={1} />
 				</Text>
 			</Flex>
+            <Flex alignItems={"center"} gap={2}>
+                    <DeleteIcon onClick={handleDelete} cursor={'pointer'}/>
+            </Flex>
+
         </Flex>
         <Divider />
         <Flex flexDir={"column"} gap={4} my={4} p={2} height={"400px"} overflowY={"auto"}>

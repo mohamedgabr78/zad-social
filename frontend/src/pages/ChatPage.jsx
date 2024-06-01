@@ -8,7 +8,6 @@ import useShowToast from '../hooks/useShowToast';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { conversationAtom, selectedConversationAtom, userAtom } from '../atoms';
 
-
 function ChatPage() {
 	
 	const showToast = useShowToast()
@@ -18,6 +17,12 @@ function ChatPage() {
 	const [searchText, setSearchText] = useState("");
 	const [searchLoading, setSearchLoading] = useState(false);
 	const currentUser = useRecoilValue(userAtom);
+	const emptyConversation = {
+		_id: "",
+		userId: "",
+		username: "",
+		profilePic: "",
+	};
 
 	const handleSearch = async (e) => {
 		e.preventDefault();
@@ -62,7 +67,6 @@ function ChatPage() {
 					sender: "",
 				},
 			};
-
 			setConversations((prev) => [ ...prev, mockConversation]);
 		}
 		catch (error) {
@@ -91,6 +95,32 @@ function ChatPage() {
 		getConversations();
 	}
 	, [showToast, setConversations]);
+
+	const handleDelete = async () => {
+
+		if (!window.confirm("Are You Sure You Want To Delete This Conversation?")) return;
+        const conv = conversations.find((conv) => conv._id === selectedConversation._id);
+		if(conv.mock){
+			setConversations((prev) => prev.filter((conversation) => conversation._id !== selectedConversation._id));
+			setSelectedConversation({...emptyConversation});
+			return;
+		}
+        try {
+            const res = await fetch(`/api/messages/conversations/${conv._id}`, {
+                method: "DELETE",
+            });
+            const data = await res.json();
+            if (data.error) {
+                showToast(data.error, "error");
+                return;
+            }
+            setConversations((prev) => prev.filter((conversation) => conversation._id !== selectedConversation._id));
+			setSelectedConversation({...emptyConversation});
+        } catch (error) {
+            showToast("An error occurred", "error");
+        }
+    };
+
 
   return (
     <Box
@@ -144,7 +174,7 @@ function ChatPage() {
 					)}
 				</Flex>
                 { selectedConversation._id !== ''? ( 
-					<MessageContainer />
+					<MessageContainer handleDelete={handleDelete}/>
 					) : (
 					<Flex
 					flex={70}

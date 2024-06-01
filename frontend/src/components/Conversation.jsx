@@ -23,23 +23,23 @@ function Conversation(conversation) {
 
   return (
     <Flex
-    gap={4}
-    alignItems={"center"}
-    p={"1"}
-    _hover={{
-        cursor: "pointer",
-        bg: useColorModeValue("gray.600", "gray.dark"),
-        color: "white",
-    }}
-    onClick={() => setSelectedConversation({
-        _id: conversation.conversation._id,
-        userId: user._id,
-        username: user.username,
-        profilePic: user.profilePic,
-        mock: conversation.conversation.mock,
-    })}
-    bg={selectedConversation.userId === user._id ? colorMode: ""}
-    borderRadius={"md"}
+        gap={4}
+        alignItems={"center"}
+        p={"1"}
+        _hover={{
+            cursor: "pointer",
+            bg: useColorModeValue("gray.600", "gray.dark"),
+            color: "white",
+        }}
+        onClick={() => setSelectedConversation({
+            _id: conversation.conversation._id,
+            userId: user._id,
+            username: user.username,
+            profilePic: user.profilePic,
+            mock: conversation.conversation.mock,
+        })}
+        bg={selectedConversation.userId === user._id ? colorMode: ""}
+        borderRadius={"md"}
     >
         <WrapItem>
             <Avatar size={{

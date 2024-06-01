@@ -10,7 +10,7 @@ function MessageInput({setMessages}) {
   const showToast = useShowToast()
   const selectedConversation = useRecoilValue(selectedConversationAtom);
   const [conversations, setConversations] = useRecoilState(conversationAtom);
-  const [messageText, setMessageTest] = useState("");
+  const [messageText, setMessageText] = useState("");
 
   const sendMessage = async(e) => {
     e.preventDefault();
@@ -30,23 +30,22 @@ function MessageInput({setMessages}) {
       }
       setMessages((prev) => [...prev, data]);
 
-      setConversations((prev) => {
-        const newConversations = prev.map((conversation) => {
-          if (conversation._id === selectedConversation.conversationId) {
-            return {
-              ...conversation,
-              lastMessage: {
-                text: messageText,
-                sender: conversation.members[0] === selectedConversation.userId ? conversation.members[0] : conversation.members[1],
-              },
-            };
-          }
-          return conversation;
-        });
-        return newConversations;
-      });
-      
-      setMessageTest("");
+			setConversations((prevConvs) => {
+				const updatedConversations = prevConvs.map((conversation) => {
+					if (conversation._id === selectedConversation._id) {
+						return {
+							...conversation,
+							lastMessage: {
+								text: messageText,
+								sender: data.sender,
+							},
+						};
+					}
+					return conversation;
+				});
+				return updatedConversations;
+			});
+			setMessageText("");
   }
     catch (error) {
       showToast("An error occurred", error, "");
@@ -57,7 +56,7 @@ function MessageInput({setMessages}) {
     <form onSubmit={sendMessage}>
         <InputGroup>
             <Input type="text" placeholder="Type a message" width={'full'}
-            onChange={(e)=> setMessageTest(e.target.value)}
+            onChange={(e)=> setMessageText(e.target.value)}
             value={messageText}
             />
             <InputRightElement onClick={sendMessage} cursor="pointer" >
