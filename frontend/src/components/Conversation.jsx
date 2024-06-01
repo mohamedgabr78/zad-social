@@ -12,6 +12,7 @@ import { useRecoilState } from "recoil";
 import { userAtom, selectedConversationAtom } from "../atoms";
 import { BsCheck2All } from "react-icons/bs";
 
+
 function Conversation(conversation) {
 
     const currentUser = useRecoilState(userAtom);
@@ -31,10 +32,11 @@ function Conversation(conversation) {
         color: "white",
     }}
     onClick={() => setSelectedConversation({
-        conversationId: conversation.conversation._id,
+        _id: conversation.conversation._id,
         userId: user._id,
         username: user.username,
         profilePic: user.profilePic,
+        mock: conversation.conversation.mock,
     })}
     bg={selectedConversation.userId === user._id ? colorMode: ""}
     borderRadius={"md"}
@@ -59,6 +61,7 @@ function Conversation(conversation) {
                 {lastMessage.sender === currentUser[0]._id ? <BsCheck2All size={16}/> : ''}
                 {lastMessage.text.length > 15 ? lastMessage.text.slice(0, 15) + '...' : lastMessage.text}
                 </Text>
+                
         </Stack>
     </Flex>
   )

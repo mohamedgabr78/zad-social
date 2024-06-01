@@ -15,8 +15,11 @@ function MessageContainer() {
     const currentUser = useRecoilValue(userAtom);
     const messagesEndRef = useRef(null);
 
+    console.log(selectedConversation);
+
 useEffect(() => {
     const getMessages = async () => {
+        if(selectedConversation.mock) return;
         setLoading(true);
         try {
             const res = await fetch(`/api/messages/${selectedConversation.userId}`);

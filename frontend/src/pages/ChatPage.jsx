@@ -46,6 +46,24 @@ function ChatPage() {
 					profilePic: searchedUser.profilePic
 				})
 			}
+
+			const mockConversation = {
+				mock: true,
+				_id: Date.now().toString(),
+				members: [
+				{
+					_id: searchedUser._id,
+					username: searchedUser.username,
+					profilePic: searchedUser.profilePic
+				
+				}],
+				lastMessage: {
+					text: "",
+					sender: "",
+				},
+			};
+
+			setConversations((prev) => [ ...prev, mockConversation]);
 		}
 		catch (error) {
 			showToast("An error occurred", "error");
