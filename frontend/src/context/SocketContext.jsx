@@ -12,6 +12,7 @@ export const useSocket = () => {
 export const SocketContextProvider = ({children}) => {
     const [socket, setSocket] = useState(null);
     const user = useRecoilValue(userAtom);
+    const [onlineUsers, setOnlineUsers] = useState([]);
     
 
     useEffect(() => {
@@ -24,14 +25,14 @@ export const SocketContextProvider = ({children}) => {
         setSocket(socket);
         
         socket?.on('getOnlineUsers', (users) => {
-            console.log(users);
+            setOnlineUsers(users);
         });
 
         return () => socket && socket.close();
     }, [user?._id]);
 
     return (
-        <SocketContext.Provider value={{socket}}>
+        <SocketContext.Provider value={{socket, onlineUsers}}>
             {children}
         </SocketContext.Provider>
     );

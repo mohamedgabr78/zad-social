@@ -13,13 +13,13 @@ import { userAtom, selectedConversationAtom } from "../atoms";
 import { BsCheck2All } from "react-icons/bs";
 
 
-function Conversation(conversation) {
+function Conversation({conversation, isOnline}) {
 
     const currentUser = useRecoilState(userAtom);
     const colorMode = useColorModeValue("gray.600", "gray.dark");
     const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
-    const user = conversation.conversation.members[0];
-	const lastMessage = conversation.conversation.lastMessage;
+    const user = conversation.members[0];
+	const lastMessage = conversation.lastMessage;
 
   return (
     <Flex
@@ -49,7 +49,7 @@ function Conversation(conversation) {
             }}
             src={user.profilePic}
             >
-                <AvatarBadge boxSize="1em" bg="green.500" />
+                {isOnline && <AvatarBadge boxSize="1em" bg="green.500" />}
             </Avatar>
         </WrapItem>
         <Stack>
