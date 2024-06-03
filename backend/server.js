@@ -7,12 +7,11 @@ import postRoutes from './routes/postRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
 import cors from 'cors';
 import {v2 as cloudinary} from 'cloudinary';
+import { app, httpServer } from './socket/socket.js';
 
 
 dotenv.config();
 connectDB(); 
-const app = express();
-
 
 const PORT = process.env.PORT || 5000;
 
@@ -38,6 +37,6 @@ app.use('/api/posts', postRoutes); // all routes in postRoutes will start with /
 app.use('/api/messages', messageRoutes); // all routes in messageRoutes will start with /api/messages
 
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
     });

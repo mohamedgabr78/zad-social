@@ -20,7 +20,6 @@ function useLogOut() {
             }
             else {
                 localStorage.removeItem('user-threads')
-                window.location.href = '/'
                 setUser(null)
             }
         } catch (error) {
