@@ -1,11 +1,10 @@
 import { Avatar, Box, Button, Flex, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import useFollowing from '../hooks/useFollowing'
 
 function SuggestedUser({user}) {
 
-const following = false
-const updating = false
-
+    const {following, handleFollowing, updating} = useFollowing(user)
 
   return (
     <>
@@ -25,7 +24,7 @@ const updating = false
 				size={"sm"}
 				color={following ? "black" : "white"}
 				bg={following ? "white" : "blue.400"}
-				// onClick={handleFollow}
+				onClick={handleFollowing}
 				isLoading={updating}
 				_hover={{
 					color: following ? "black" : "white",

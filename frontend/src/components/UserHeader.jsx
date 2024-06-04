@@ -5,15 +5,13 @@ import { CgMoreO } from "react-icons/cg";
 import { useRecoilValue } from "recoil";
 import { userAtom } from '../atoms';
 import useShowToast from "../hooks/useShowToast";
-import { useState } from "react";
+import useFollowing from "../hooks/useFollowing";
 
 const UserHeader = ({user}) => {
 
+    const currentUser = useRecoilValue(userAtom)
+    const {following, handleFollowing, updating} = useFollowing(user)
     const showToast = useShowToast()
-    const currentUser = useRecoilValue(userAtom) // logged in user
-    const [following, setFollowing] = useState(user.followers.includes(currentUser?._id))
-    const [uptating, setUpdating] = useState(false)
-
 
     const CopyURL = () => {
         navigator.clipboard.writeText(window.location.href).then(function() {
@@ -31,44 +29,6 @@ const UserHeader = ({user}) => {
                 isClosable: true,
               })
           });
-    }
-
-    const handleFollowing = async() => {
-
-        if(!currentUser) {
-            showToast('Error', 'You need to login first', 'error')
-            return
-        }
-
-        if(uptating) return
-        setUpdating(true)
-        try{
-            const res = await fetch(`/api/users/follow/${user._id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            })
-            const data = await res.json()
-            if(data.error) {
-                showToast('Error', data.error, 'error')
-                return
-            }
-            if(following){
-                showToast('Success', `Unfollowed ${user.name}`, 'success')
-                user.followers = user.followers.filter(follower => follower !== currentUser?._id)
-            }else{
-                showToast('Success', `Followed ${user.name}`, 'success')
-                user.followers.push(currentUser?._id)
-            }
-            setFollowing(!following)
-        }
-        catch(error) {
-            showToast('Error', error, 'error');
-        }finally{
-            setUpdating(false)
-        }
     }
 
     return (
@@ -99,7 +59,7 @@ const UserHeader = ({user}) => {
             <Link to={"/update"}>
             <Button colorScheme={"blue"} size={"sm"}>Update Profile</Button>
             </Link>
-            ):<Button colorScheme={"blue"} size={"sm"} onClick={handleFollowing} isLoading={uptating}>{`${following ? 'Unfollow' : 'Follow'}`}</Button>
+            ):<Button colorScheme={"blue"} size={"sm"} onClick={handleFollowing} isLoading={updating}>{`${following ? 'Unfollow' : 'Follow'}`}</Button>
             }
             
             <Flex justifyContent={"space-between"} w={"full"}>
