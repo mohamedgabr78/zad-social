@@ -1,47 +1,66 @@
-import { Flex, Image, Input, InputGroup, InputRightElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Spinner, useDisclosure } from '@chakra-ui/react'
-import { IoSendSharp } from 'react-icons/io5'
-import useShowToast from '../hooks/useShowToast'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { selectedConversationAtom, conversationAtom } from '../atoms/'
-import { useState, useRef } from 'react'
-import { BsFillImageFill } from 'react-icons/bs'
-import usePreviewImage from '../hooks/usePreviewImg'
+import {
+	Flex,
+	Image,
+	Input,
+	InputGroup,
+	InputRightElement,
+	Modal,
+	ModalBody,
+	ModalCloseButton,
+	ModalContent,
+	ModalHeader,
+	ModalOverlay,
+	Spinner,
+	useDisclosure,
+} from "@chakra-ui/react";
+import { useRef, useState } from "react";
+import { IoSendSharp } from "react-icons/io5";
+import useShowToast from "../hooks/useShowToast";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { BsFillImageFill } from "react-icons/bs";
+import usePreviewImg from "../hooks/usePreviewImg";
+import { selectedConversationAtom, conversationAtom } from "../atoms";
+import messageSound from '../assets/sounds/pop.mp3'
 
-function MessageInput({setMessages}) {
 
-  const showToast = useShowToast()
-  const selectedConversation = useRecoilValue(selectedConversationAtom);
-  const setConversations = useRecoilState(conversationAtom);
-  const [messageText, setMessageText] = useState("");
-  const [isSending, setIsSending] = useState(false);
-  const imageRef = useRef(null);
-  const { onClose } = useDisclosure()
-  const { handleImageChange, imgUrl, setImgUrl } = usePreviewImage();
+const MessageInput = ({ setMessages }) => {
+	const [messageText, setMessageText] = useState("");
+	const showToast = useShowToast();
+	const selectedConversation = useRecoilValue(selectedConversationAtom);
+	const setConversations = useSetRecoilState(conversationAtom);
+	const imageRef = useRef(null);
+	const { onClose } = useDisclosure();
+	const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
+	const [isSending, setIsSending] = useState(false);
 
-  const handleSendMessage = async(e) => {
-    e.preventDefault();
-    if (!messageText && !imgUrl) {return;}
-    if (isSending) {return;}
+	const handleSendMessage = async (e) => {
+		e.preventDefault();
+		if (!messageText && !imgUrl) return;
+		if (isSending) return;
 
-    setIsSending(true);
+		setIsSending(true);
+    const sound = new Audio(messageSound);
+    sound.play();
 
-    try {
-      const res = await fetch(`/api/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: messageText,
-          receiverId: selectedConversation.userId,
-          img: imgUrl
-        })
-      });
-      const data = await res.json();
-      if (data.error) {
-        showToast(data.error, "error", 5000);
-      }
-      setMessages((prev) => [...prev, data]);
+		try {
+			const res = await fetch("/api/messages", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					message: messageText,
+					receiverId: selectedConversation.userId,
+					img: imgUrl,
+				}),
+			});
+			const data = await res.json();
+			if (data.error) {
+				showToast("Error", data.error, "error");
+				return;
+			}
+			console.log(data);
+			setMessages((messages) => [...messages, data]);
 
 			setConversations((prevConvs) => {
 				const updatedConversations = prevConvs.map((conversation) => {
@@ -59,29 +78,29 @@ function MessageInput({setMessages}) {
 				return updatedConversations;
 			});
 			setMessageText("");
-      setImgUrl("");
-  }
-    catch (error) {
-      showToast("An error occurred", error, "");
-    }finally {
-      setIsSending(false);
-    }
-  }
-
-  return (
-    <Flex gap={2} alignItems={"center"}>
-    <form onSubmit={handleSendMessage} style={{ flex:95 }}>
-        <InputGroup>
-            <Input type="text" placeholder="Type a message" width={'full'}
-            onChange={(e)=> setMessageText(e.target.value)}
-            value={messageText}
-            />
-            <InputRightElement onClick={handleSendMessage} cursor="pointer" >
-            <IoSendSharp/>
-            </InputRightElement>
-        </InputGroup>
-    </form>
-    <Flex flex={5} cursor={"pointer"}>
+			setImgUrl("");
+		} catch (error) {
+			showToast("Error", error.message, "error");
+		} finally {
+			setIsSending(false);
+		}
+	};
+	return (
+		<Flex gap={2} alignItems={"center"}>
+			<form onSubmit={handleSendMessage} style={{ flex: 95 }}>
+				<InputGroup>
+					<Input
+						w={"full"}
+						placeholder='Type a message'
+						onChange={(e) => setMessageText(e.target.value)}
+						value={messageText}
+					/>
+					<InputRightElement onClick={handleSendMessage} cursor={"pointer"}>
+						<IoSendSharp />
+					</InputRightElement>
+				</InputGroup>
+			</form>
+			<Flex flex={5} cursor={"pointer"}>
 				<BsFillImageFill size={20} onClick={() => imageRef.current.click()} />
 				<Input type={"file"} hidden ref={imageRef} onChange={handleImageChange} />
 			</Flex>
@@ -110,8 +129,8 @@ function MessageInput({setMessages}) {
 					</ModalBody>
 				</ModalContent>
 			</Modal>
-    </Flex>
-  )
-}
+		</Flex>
+	);
+};
 
-export default MessageInput
+export default MessageInput;

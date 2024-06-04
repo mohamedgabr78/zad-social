@@ -1,6 +1,5 @@
 import { Avatar, Box, Flex, VStack,Text, Menu, Portal, MenuButton, MenuItem, MenuList, Button } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
-import { BsGithub, BsLinkedin } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
 import { useRecoilValue } from "recoil";
 import { userAtom } from '../atoms';

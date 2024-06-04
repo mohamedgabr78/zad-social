@@ -6,6 +6,7 @@ import useShowToast from '../hooks/useShowToast'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { conversationAtom, selectedConversationAtom, userAtom } from '../atoms/'
 import { useSocket } from '../context/SocketContext'
+import messageSound from '../assets/sounds/notification.wav'
 
 
 function MessageContainer() {
@@ -26,6 +27,10 @@ function MessageContainer() {
                 setMessages((prev) => [...prev, message]);
             }
 
+            if(!document.hasFocus()){
+            const sound = new Audio(messageSound);
+            sound.play();
+        }
             setConversation((prev) => {
                 const updatedConversations = prev.map((conversation) => {
                     if (conversation._id === message.conversationId) {

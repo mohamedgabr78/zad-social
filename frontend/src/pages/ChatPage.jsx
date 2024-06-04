@@ -46,6 +46,7 @@ function ChatPage() {
 					username: searchedUser.username,
 					profilePic: searchedUser.profilePic
 				})
+				return;
 			}
 
 			const mockConversation = {
