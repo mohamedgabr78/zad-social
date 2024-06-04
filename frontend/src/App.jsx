@@ -10,10 +10,15 @@ import { userAtom } from "./atoms/userAtoms";
 import UpdateProfile from "./pages/UpdateProfile";
 import CreatePost from "./components/CreatePost";
 import ChatPage from "./pages/ChatPage";
+import { useLocation } from 'react-router-dom';
+
+
 
 function App() {
 
   const user = useRecoilValue(userAtom)
+  const location = useLocation();
+  const path = location.pathname;
 
   return (
     <Box position={'relative'} w={'full'}>
@@ -28,7 +33,7 @@ function App() {
         <Route path='/chat' element={user? <ChatPage /> : <Navigate to={'/auth'}/>} />
       </Routes>  
 
-      {user && <CreatePost />}
+      {user && path !== '/chat' && <CreatePost />}
     </Container>
     </Box>
   )

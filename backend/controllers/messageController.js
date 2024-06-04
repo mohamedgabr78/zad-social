@@ -7,6 +7,7 @@ import { getRecipientSocketId, io } from '../socket/socket.js';
 const sendMessage = async (req, res) => {
     try {
         const { message, receiverId } = req.body;
+        let { img } = req.body;
         const senderId = req.user._id;
 
         const receiver = await User.findById(receiverId);
@@ -31,11 +32,17 @@ const sendMessage = async (req, res) => {
             await conversation.save();
         }
 
-        const newMessage = new Message ({
-            conversationId: conversation._id,
-            sender: senderId,
-            text: message
-        });
+		if (img) {
+			const uploadedResponse = await cloudinary.uploader.upload(img);
+			img = uploadedResponse.secure_url;
+		}
+
+		const newMessage = new Message({
+			conversationId: conversation._id,
+			sender: senderId,
+			text: message,
+			img: img || "",
+		});
 
         await Promise.all([
             newMessage.save(),
