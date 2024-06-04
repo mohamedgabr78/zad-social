@@ -32,11 +32,11 @@ export default function SignupCard() {
     username: '',
     email: '',
     password: '',
-    linkedIn: '',
+    linkedin: '',
     github: '',
     })
 
-    const  handleSingup = async() => {
+    const handleSingup = async() => {
       if(!inputs.name || !inputs.username || !inputs.email || !inputs.password) {
         showToast("Error","Please fill all the fields","error")
         return
@@ -107,7 +107,7 @@ export default function SignupCard() {
             </FormControl>
             <FormControl >
               <FormLabel>Your LinkedIn Link</FormLabel>
-              <Input type="email" value={inputs.linkedIn} onChange={e=>setInputs({...inputs , linkedIn:e.target.value})}/>
+              <Input type="email" value={inputs.linkedin} onChange={e=>setInputs({...inputs , linkedin:e.target.value})}/>
             </FormControl>
             <FormControl >
               <FormLabel>Your Github Link</FormLabel>
