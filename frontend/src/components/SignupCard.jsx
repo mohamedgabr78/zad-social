@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Flex,
   Box,
@@ -22,7 +20,7 @@ import { useSetRecoilState } from 'recoil'
 import { authScreenAtom, userAtom } from '../atoms';
 import useShowToast from '../hooks/useShowToast'
 
-export default function SignupCard() {
+const SignupCard = () => {
   const [showPassword, setShowPassword] = useState(false)
   const setUser = useSetRecoilState(userAtom)
   const showToast = useShowToast()
@@ -152,3 +150,5 @@ export default function SignupCard() {
     </Flex>
   )
 } 
+
+export default SignupCard
