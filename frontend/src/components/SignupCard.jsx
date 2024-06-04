@@ -31,7 +31,9 @@ export default function SignupCard() {
     name: '',
     username: '',
     email: '',
-    password: ''
+    password: '',
+    linkedIn: '',
+    github: '',
     })
 
     const  handleSingup = async() => {
@@ -102,6 +104,14 @@ export default function SignupCard() {
             <FormControl isRequired>
               <FormLabel>Email address</FormLabel>
               <Input type="email" value={inputs.email} onChange={e=>setInputs({...inputs , email:e.target.value})}/>
+            </FormControl>
+            <FormControl >
+              <FormLabel>Your LinkedIn Link</FormLabel>
+              <Input type="email" value={inputs.linkedIn} onChange={e=>setInputs({...inputs , linkedIn:e.target.value})}/>
+            </FormControl>
+            <FormControl >
+              <FormLabel>Your Github Link</FormLabel>
+              <Input type="email" value={inputs.github} onChange={e=>setInputs({...inputs , github:e.target.value})}/>
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Password</FormLabel>

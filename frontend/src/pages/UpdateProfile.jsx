@@ -27,6 +27,8 @@ import usePreviewImg from '../hooks/usePreviewImg';
         name: user.name,
         bio: user.bio,
         password: '',
+        linkedIn: user.linkedIn,
+        github: user.github,
     });
 
     const fileRef = useRef(null);
@@ -136,6 +138,22 @@ import usePreviewImg from '../hooks/usePreviewImg';
               _placeholder={{ color: 'gray.500' }}
               type="password"
               value={inputs.password} onChange={e=>{setInputs({...inputs, password:e.target.value})}}/>
+          </FormControl>
+          <FormControl id="linkedIn">
+            <FormLabel>Your LinkedIn Link</FormLabel>
+            <Input
+              placeholder="LinkedIn"
+              _placeholder={{ color: 'gray.500' }}
+              type="text"
+              value={inputs.linkedIn} onChange={e=>{setInputs({...inputs, linkedIn:e.target.value})}}/>
+          </FormControl>
+          <FormControl id="github">
+            <FormLabel>Your Github Link</FormLabel>
+            <Input
+              placeholder="Github"
+              _placeholder={{ color: 'gray.500' }}
+              type="text"
+              value={inputs.github} onChange={e=>{setInputs({...inputs, github:e.target.value})}}/>
           </FormControl>
           <Stack spacing={6} direction={['column', 'row']}>
             <Button

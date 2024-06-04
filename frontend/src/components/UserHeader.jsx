@@ -6,9 +6,11 @@ import { useRecoilValue } from "recoil";
 import { userAtom } from '../atoms';
 import useShowToast from "../hooks/useShowToast";
 import useFollowing from "../hooks/useFollowing";
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
 const UserHeader = ({user}) => {
 
+    
     const currentUser = useRecoilValue(userAtom)
     const {following, handleFollowing, updating} = useFollowing(user)
     const showToast = useShowToast()
@@ -70,14 +72,10 @@ const UserHeader = ({user}) => {
                 </Flex>
                 <Flex gap={2}>
                     <Box>
-                        <a href={"https://www.linkedin.com/in/mohamed-gabr78/"} target={"_blank"} rel={"noreferrer"}>
-                        <BsLinkedin size={24} cursor={"pointer"} />
-                        </a>
+                        <FaLinkedin onClick={() => window.open(`${currentUser.linkedIn}`, '_blank')} size={25} cursor={'pointer'}/>
                     </Box>
                     <Box>
-                        <a href={"https://github.com/mohamedgabr78"} target={"_blank"} rel={"noreferrer"}>
-                        <BsGithub size={24} cursor={"pointer"} />
-                        </a>
+                        <FaGithub onClick={() => window.open(`${currentUser.github}`, '_blank')} size={25} cursor={'pointer'}/>
                     </Box>
                     <Box>
                         <Menu>

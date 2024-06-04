@@ -12,7 +12,7 @@ import Post from '../models/postModel.js';
 const signupUser = async (req, res) => {
     
     try {
-        const { name, email, username, password } = req.body;
+        const { name, email, username, password, linkedIn, github } = req.body;
         const user = await User.findOne({ $or: [{ email }, { username }] });
 
         if (user) {
@@ -27,7 +27,10 @@ const signupUser = async (req, res) => {
             name,
             email,
             username,
-            password: hashedPassword
+            password: hashedPassword,
+            linkedIn,
+            github
+            
         });
         await newUser.save();
 
@@ -41,6 +44,8 @@ const signupUser = async (req, res) => {
                 username: newUser.username,
                 bio: newUser.bio,
                 profilePic: newUser.profilePic,
+                linkedIn: newUser.linkedIn,
+                github: newUser.github,
             });
         }else{
             res.status(400).json({ error: 'Invalid user data' });
@@ -69,6 +74,8 @@ const loginUser = async (req, res) => {
             username: user.username,
             bio: user.bio,
             profilePic: user.profilePic,
+            linkedin: user.linkedin,
+            github: user.github,
         });
 
     }
@@ -122,8 +129,9 @@ const followUnfollowUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-	const { name, email, username, password, bio } = req.body;
+	const { name, email, username, password, bio, linkedIn, github } = req.body;
 	let { profilePic } = req.body;
+
 
 	const userId = req.user._id;
 	try {
@@ -153,6 +161,8 @@ const updateUser = async (req, res) => {
 		user.username = username || user.username;
 		user.profilePic = profilePic || user.profilePic;
 		user.bio = bio || user.bio;
+        user.linkedIn = linkedIn || user.linkedIn;
+        user.github = github || user.github;
 
 		user = await user.save();
 
