@@ -3,12 +3,12 @@ import Message from './Message'
 import MessageInput from './MessageInput'
 import { useEffect, useState, useRef } from 'react'
 import useShowToast from '../hooks/useShowToast'
-import { useRecoilValue } from 'recoil'
-import { selectedConversationAtom, userAtom } from '../atoms/'
-import { DeleteIcon } from "@chakra-ui/icons";
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { conversationAtom, selectedConversationAtom, userAtom } from '../atoms/'
+import { useSocket } from '../context/SocketContext'
 
 
-function MessageContainer({handleDelete}) {
+function MessageContainer() {
 
     const showToast = useShowToast()
     const selectedConversation = useRecoilValue(selectedConversationAtom);
@@ -16,33 +16,91 @@ function MessageContainer({handleDelete}) {
     const [messages, setMessages] = useState([]);
     const currentUser = useRecoilValue(userAtom);
     const messagesEndRef = useRef(null);
+    const {socket} = useSocket();
+    const setConversation = useRecoilState(conversationAtom);
+    
+    useEffect(() => {
+        socket.on('newMessage', (message) => {
 
-useEffect(() => {
-    const getMessages = async () => {
-        if(selectedConversation.mock) return;
-        setLoading(true);
-        try {
-            const res = await fetch(`/api/messages/${selectedConversation.userId}`);
-            const data = await res.json();
-            if (data.error) {
-                showToast("Error", data.error, "error")
+            if(selectedConversation._id === message.conversationId) {
+                setMessages((prev) => [...prev, message]);
             }
-            setMessages(data);
-            setLoading(false);
-        }
-        catch (error) {
-            showToast("Error", error, "error")
-        }
-    }
-    getMessages();
-}
-, [showToast, selectedConversation.userId]);
 
-useEffect(() => {
-    if (!loading) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            setConversation((prev) => {
+                const updatedConversations = prev.map((conversation) => {
+                    if (conversation._id === message.conversationId) {
+                        return {
+                            ...conversation,
+                            lastMessage: {
+                                text: message.text,
+                                sender: message.sender,
+                            }
+                        }
+                    }
+                    return conversation;
+                });
+                return updatedConversations;
+            });
+        }
+        );
+        return () => socket && socket.off('newMessage');
+    }, [socket, selectedConversation, setConversation]);
+
+    useEffect(() => {
+        const lastMessageFromOtherUser = messages.length && messages[messages.length-1].sender !== currentUser._id;
+
+        if (lastMessageFromOtherUser) {
+            socket.emit('markMessageSeen', {
+                conversationId: selectedConversation._id,
+                userId: selectedConversation.userId
+            });
+        }
+        socket.on('messageSeen', ({conversationId}) => {
+            if (selectedConversation._id === conversationId) {
+                setMessages((prev) =>{
+                    const updatedMessages = prev.map((message) => {
+                        if (!message.seen) {
+                            return {
+                                ...message,
+                                seen: true
+                            }
+                        }
+                        return message;
+                    });
+                    return updatedMessages;
+                });
+            }
+        });
+
+    },[messages, currentUser._id, selectedConversation, socket]);
+
+
+    useEffect(() => {
+        const getMessages = async () => {
+            if(selectedConversation.mock) return;
+            setLoading(true);
+            try {
+                const res = await fetch(`/api/messages/${selectedConversation.userId}`);
+                const data = await res.json();
+                if (data.error) {
+                    showToast("Error", data.error, "error")
+                }
+                setMessages(data);
+                setLoading(false);
+            }
+            catch (error) {
+                showToast("Error", error, "error")
+            }
+        }
+        getMessages();
     }
-  }, [messages, loading]);
+    , [showToast, selectedConversation.userId, selectedConversation.mock]);
+
+    useEffect(() => {
+        if (!loading) {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages, loading]);
 
 
   return (
@@ -56,9 +114,6 @@ useEffect(() => {
 					<Image src='/verified.png' w={4} h={4} ml={1} />
 				</Text>
 			</Flex>
-            <Flex alignItems={"center"} gap={2}>
-                    <DeleteIcon onClick={handleDelete} cursor={'pointer'}/>
-            </Flex>
 
         </Flex>
         <Divider />

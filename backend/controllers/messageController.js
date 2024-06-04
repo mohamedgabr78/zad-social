@@ -2,6 +2,7 @@ import User from '../models/userModel.js';
 import Conversation from '../models/conversationModel.js';
 import Message from '../models/messageModel.js';
 import { v2 as cloudinary } from 'cloudinary';
+import { getRecipientSocketId, io } from '../socket/socket.js';
 
 const sendMessage = async (req, res) => {
     try {
@@ -45,6 +46,11 @@ const sendMessage = async (req, res) => {
                 }
             })
         ])
+
+        const recipientSocketId = getRecipientSocketId(receiverId);
+        if (recipientSocketId){
+        io.to(recipientSocketId).emit('newMessage', newMessage);
+    }
 
         return res.status(200).json(newMessage);
 
@@ -95,26 +101,5 @@ const getConversations = async (req, res) => {
     }
 }
 
-const deleteConversation = async (req, res) => {
 
-    const { id } = req.params;
-    const userId = req.user._id;
-
-    try {
-        const conversation = await Conversation.findById(id);
-
-        if (!conversation) return res.status(404).json({ error: 'Conversation not found' });
-
-        if (!conversation.members.includes(userId)) return res.status(403).json({ error: 'You are not authorized to delete this conversation' });
-
-        await conversation.deleteOne();
-
-        return res.status(200).json({ message: 'Conversation deleted successfully' });
-
-    } catch (error) {
-        return res.status(500).json({ error: error.message });
-    }
-}
-
-
-export { sendMessage, getMessages, getConversations, deleteConversation };
+export { sendMessage, getMessages, getConversations };

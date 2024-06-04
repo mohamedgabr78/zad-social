@@ -18,13 +18,7 @@ function ChatPage() {
 	const [searchText, setSearchText] = useState("");
 	const [searchLoading, setSearchLoading] = useState(false);
 	const currentUser = useRecoilValue(userAtom);
-	const {onlineUsers} = useSocket();
-	const emptyConversation = {
-		_id: "",
-		userId: "",
-		username: "",
-		profilePic: "",
-	};
+	const {onlineUsers, socket} = useSocket();
 
 	const handleSearch = async (e) => {
 		e.preventDefault();
@@ -98,30 +92,27 @@ function ChatPage() {
 	}
 	, [showToast, setConversations]);
 
-	const handleDelete = async () => {
-
-		if (!window.confirm("Are You Sure You Want To Delete This Conversation?")) return;
-        const conv = conversations.find((conv) => conv._id === selectedConversation._id);
-		if(conv.mock){
-			setConversations((prev) => prev.filter((conversation) => conversation._id !== selectedConversation._id));
-			setSelectedConversation({...emptyConversation});
-			return;
-		}
-        try {
-            const res = await fetch(`/api/messages/conversations/${conv._id}`, {
-                method: "DELETE",
-            });
-            const data = await res.json();
-            if (data.error) {
-                showToast(data.error, "error");
-                return;
-            }
-            setConversations((prev) => prev.filter((conversation) => conversation._id !== selectedConversation._id));
-			setSelectedConversation({...emptyConversation});
-        } catch (error) {
-            showToast("An error occurred", "error");
-        }
-    };
+	useEffect(() => {
+		socket?.on("messageSeen", ({conversationId}) => {
+			setConversations((prev) => {
+				const updatedConversations = prev.map((conversation) => {
+					if (conversation._id === conversationId) {
+						return {
+							...conversation,
+							lastMessage: {
+								...conversation.lastMessage,
+								seen: true
+							}
+						}
+					}
+					return conversation;
+				});
+				return updatedConversations;
+			});
+		});
+		return () => socket && socket.off("messageSeen");
+	}
+	, [socket, setConversations]);
 
 
   return (
@@ -177,7 +168,7 @@ function ChatPage() {
 					)}
 				</Flex>
                 { selectedConversation._id !== ''? ( 
-					<MessageContainer handleDelete={handleDelete}/>
+					<MessageContainer/>
 					) : (
 					<Flex
 					flex={70}

@@ -1,6 +1,7 @@
 import {
 	Avatar,
 	AvatarBadge,
+	Box,
 	Flex,
 	Image,
 	Stack,
@@ -32,11 +33,11 @@ function Conversation({conversation, isOnline}) {
             color: "white",
         }}
         onClick={() => setSelectedConversation({
-            _id: conversation.conversation._id,
+            _id: conversation._id,
             userId: user._id,
             username: user.username,
             profilePic: user.profilePic,
-            mock: conversation.conversation.mock,
+            mock: conversation.mock,
         })}
         bg={selectedConversation.userId === user._id ? colorMode: ""}
         borderRadius={"md"}
@@ -58,7 +59,11 @@ function Conversation({conversation, isOnline}) {
                 <Image src="/verified.png" alt="online" boxSize={2} ml={1} w={4} h={4} />
                 </Text>
             <Text fontSize={"xs"} display={'flex'} alignItems={'center'} gap={1}>
-                {lastMessage.sender === currentUser[0]._id ? <BsCheck2All size={16}/> : ''}
+                {lastMessage.sender === currentUser[0]._id ? (
+                    <Box color={lastMessage.seen ? "blue.400" : ""}>
+                    <BsCheck2All size={16}/>    
+                    </Box>
+                ) : ''}
                 {lastMessage.text.length > 15 ? lastMessage.text.slice(0, 15) + '...' : lastMessage.text}
                 </Text>
                 
