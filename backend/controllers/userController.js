@@ -66,6 +66,11 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ error: 'Invalid username or password' });
         }
 
+        if(user.isFrozen){
+            user.isFrozen = false;
+            await user.save();
+        }
+
         generateTokenAndSetCookie(user._id, res);
         res.status(200).json({
             _id: user._id,
@@ -202,6 +207,10 @@ const getUserProfile = async (req, res) => {
             user = await User.findOne({username: query }).select('-password').select('-updatedAt');
         }
 
+        if(user.isFrozen){
+            return res.status(403).json({ error: 'Account is frozen' });
+        }
+
         if(!user){
             return res.status(404).json({ error: 'User not found' });
         }
@@ -214,9 +223,12 @@ const getUserProfile = async (req, res) => {
 const getSuggestedUsers = async (req, res) => {
 	try {
 		// exclude the current user from suggested users array and exclude users that current user is already following
+        // also exclude user with frozen account
+
 		const userId = req.user._id;
 
 		const usersFollowedByYou = await User.findById(userId).select("following");
+        const frozenUsers = await User.find({isFrozen: true}).select('_id');
 
 		const users = await User.aggregate([
 			{
@@ -228,7 +240,11 @@ const getSuggestedUsers = async (req, res) => {
 				$sample: { size: 10 },
 			},
 		]);
-		const filteredUsers = users.filter((user) => !usersFollowedByYou.following.includes(user._id));
+
+        const filteredUsers = users.filter(
+            (user) =>
+                !usersFollowedByYou.following.includes(user._id) && !frozenUsers.includes(user._id)
+        );
 		const suggestedUsers = filteredUsers.slice(0, 5);
 
 		suggestedUsers.forEach((user) => (user.password = null));
@@ -239,5 +255,19 @@ const getSuggestedUsers = async (req, res) => {
 	}
 };
 
+const freezeAccount = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        user.isFrozen = true;
+        await user.save();
+        res.status(200).json({ success: 'Account frozen'});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
 
-export { signupUser, loginUser, logoutUser,followUnfollowUser, updateUser,getUserProfile, getSuggestedUsers };
+
+export { signupUser, loginUser, logoutUser,followUnfollowUser, updateUser,getUserProfile, getSuggestedUsers, freezeAccount };

@@ -43,6 +43,10 @@ const userSchema = mongoose.Schema({
     github: {
         type: String,
         default: ''
+    },
+    isFrozen: {
+        type: Boolean,
+        default: false
     }
 },{
     timestamps: true

@@ -8,6 +8,7 @@ import { authScreenAtom } from "../atoms"
 import { GrLogout } from "react-icons/gr";
 import useLogOut from "../hooks/useLogOut"
 import { BsFillChatFill } from "react-icons/bs"
+import { MdOutlineSettings } from "react-icons/md"
 
 
 
@@ -52,6 +53,9 @@ const Header = () => {
 					</Link>
 					<Link as={RouterLink} to={`/chat`}>
 						<BsFillChatFill size={20} />
+					</Link>
+                    <Link as={RouterLink} to={`/setting`}>
+						<MdOutlineSettings size={20} />
 					</Link>
                     <Button colorScheme="blue" variant="solid" size="xs" onClick={logOut} mt={1}>
                     <GrLogout size={15} />

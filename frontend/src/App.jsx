@@ -11,6 +11,7 @@ import UpdateProfile from "./pages/UpdateProfile";
 import CreatePost from "./components/CreatePost";
 import ChatPage from "./pages/ChatPage";
 import { useLocation } from 'react-router-dom';
+import SettingPage from "./pages/SettingPage";
 
 
 
@@ -31,6 +32,7 @@ function App() {
         <Route path='/:username' element={<UserPage />} />
         <Route path='/:username/post/:pid' element={<PostPage />} />
         <Route path='/chat' element={user? <ChatPage /> : <Navigate to={'/auth'}/>} />
+        <Route path='/setting' element={user? <SettingPage /> : <Navigate to={'/auth'}/>} />
       </Routes>  
 
       {user && path !== '/chat' && <CreatePost />}
