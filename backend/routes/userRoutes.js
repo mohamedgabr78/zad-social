@@ -1,7 +1,7 @@
 // Initialize express router and import the user controller functions and the protectRoute middleware
 
 import express from 'express';
-import { signupUser, loginUser, logoutUser,followUnfollowUser, updateUser,getUserProfile } from '../controllers/userController.js';
+import { signupUser, loginUser, logoutUser,followUnfollowUser, updateUser,getUserProfile, getSuggestedUsers } from '../controllers/userController.js';
 import  protectRoute from '../middlewares/protectRoute.js';
 
 const router = express.Router();
@@ -13,6 +13,8 @@ router.post('/login', loginUser)
 router.post('/logout', logoutUser)
 router.post('/follow/:id', protectRoute, followUnfollowUser)
 router.put('/update/:id', protectRoute, updateUser)
+router.get('/suggested', protectRoute, getSuggestedUsers)
+
 
 
 export default router;
