@@ -51,7 +51,7 @@ const HomePage = () => {
                 ))
             )}
             </Box>
-            <Box flex={30}>
+            <Box display={{base: "none", md: "block"}}>
                 <SuggestedUsers />
             </Box>
         </Flex>
