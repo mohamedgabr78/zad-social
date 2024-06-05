@@ -60,9 +60,8 @@ function CreatePost() {
 				return;
 			}
 			showToast("Success", "Post created successfully", "success");
-			if (username === user.username) {
 				setPosts((prev) => [data, ...prev]);
-			}
+			
 			onClose();
 			setPostText("");
 			setImgUrl("");

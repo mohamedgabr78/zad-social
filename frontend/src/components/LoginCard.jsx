@@ -24,8 +24,8 @@ const LoginCard = () => {
   const showToast = useShowToast()
   const setAuthScreen = useSetRecoilState(authScreenAtom)
   const [inputs, setInputs] = useState({
-    username: '',
-    password: ''
+    username: 'test',
+    password: '123'
     })
 
   const setUser = useSetRecoilState(userAtom)

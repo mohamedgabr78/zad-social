@@ -10,7 +10,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { Spinner } from "@chakra-ui/spinner";
 import { formatDistanceToNow } from "date-fns";
 import useDeletePost from "../hooks/useDeletePost";
-import Comment from "./Comment";
+import Comment from "../components/Comment";
 
 const PostPage = () => {
 	const { user, loading } = useGetProfile();

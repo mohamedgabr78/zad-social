@@ -27,7 +27,7 @@ function ChatPage() {
 			const res = await fetch(`/api/users/profile/${searchText}`);
 			const searchedUser = await res.json();
 			if (searchedUser.error) {
-				showToast(searchedUser.error, "error");
+				showToast("error", "error");
 				return;
 			}
 
@@ -51,27 +51,26 @@ function ChatPage() {
 
 			const mockConversation = {
 				mock: true,
-				_id: Date.now().toString(),
-				members: [
-				{
-					_id: searchedUser._id,
-					username: searchedUser.username,
-					profilePic: searchedUser.profilePic
-				
-				}],
 				lastMessage: {
 					text: "",
 					sender: "",
 				},
+				_id: Date.now(),
+				members: [
+					{
+						_id: searchedUser._id,
+						username: searchedUser.username,
+						profilePic: searchedUser.profilePic,
+					},
+				],
 			};
-			setConversations((prev) => [ ...prev, mockConversation]);
-		}
-		catch (error) {
-			showToast("An error occurred", "error");
-		}finally{
+			setConversations((prevConvs) => [...prevConvs, mockConversation]);
+		} catch (error) {
+			showToast("Error", error.message, "error");
+		} finally {
 			setSearchLoading(false);
 		}
-	}
+	};
 
 	useEffect(() => {
 		const getConversations = async () => {

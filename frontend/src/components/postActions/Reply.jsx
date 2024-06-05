@@ -3,13 +3,16 @@ import {
 	Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, Input
 } from "@chakra-ui/react";
 import useShowToast from "../../hooks/useShowToast";
+import { useRecoilState } from "recoil";
+import { postsAtom } from "../../atoms";
 
-const Reply = ({user, posts, setPosts, post, isOpen, onClose }) => {
+const Reply = ({user, post, isOpen, onClose }) => {
 
 	const showToast = useShowToast();
 	const [reply, setReply] = useState('');
 	const [isReplying, setIsReplying] = useState(false);
 	const currentUser = user[0];
+	const [posts, setPosts] = useRecoilState(postsAtom);
 
 	const handleReply = async () => {
 		if (!currentUser) return showToast("Error", "You must be logged in to reply to a post", "error");
@@ -29,7 +32,7 @@ const Reply = ({user, posts, setPosts, post, isOpen, onClose }) => {
 			if (data.error) return showToast("Error", data.error, "error");
 
 			const updatedPosts = posts.map(p => 
-				p._id === post._id ? { ...p, replies: [...p.replies, data] } : p
+				p._id === post._id ? { ...p, replies:data } : p
 			);
 			setPosts(updatedPosts);
 			setReply("");

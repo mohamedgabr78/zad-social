@@ -6,7 +6,7 @@ import useShowToast from '../hooks/useShowToast'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { conversationAtom, selectedConversationAtom, userAtom } from '../atoms/'
 import { useSocket } from '../context/SocketContext'
-import messageSound from '../assets/sounds/notification.wav'
+import messageSound from '../assets/sounds/notification.mp3'
 
 
 function MessageContainer() {

@@ -9,12 +9,16 @@ import messageRoutes from './routes/messageRoutes.js';
 import cors from 'cors';
 import {v2 as cloudinary} from 'cloudinary';
 import { app, httpServer } from './socket/socket.js';
+import job from './utils/helpers/cron.js';
 
 console.log(process.env.NODE_ENV);
 
 
 dotenv.config();
 connectDB(); 
+
+// cron job to keep the server awake every 14 minutes
+job.start();
 
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();

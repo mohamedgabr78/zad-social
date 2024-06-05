@@ -9,23 +9,33 @@ function Message({ownMessage, message}) {
   const selectedConversation = useRecoilValue(selectedConversationAtom);
   const currentUser = useRecoilValue(userAtom);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [date, setDate] = useState(null);
  
   return (
     <>
     {ownMessage ? (
-    <Flex gap={2} alignSelf={'flex-end'}>
+    <Flex gap={2} alignSelf={'flex-end'} onDoubleClick={() => setDate(message.createdAt)}>
       {message.text && (
-						<Flex bg={"green.400"} maxW={"350px"} p={1} borderRadius={"md"}>
-							<Text color={"white"}>{message.text}</Text>
-              <Box
-								alignSelf={"flex-end"}
-								ml={1}
-								color={message.seen ? "blue.400" : ""}
-								fontWeight={"bold"}
-							>
-								<BsCheck2All size={16} />
-							</Box>
-						</Flex>
+					<Flex display={"column"}>
+              <Text color={"white"} display={'flex'} justifyContent={"flex-end"} fontSize={7}>
+              {date && 
+              <Text>
+                {new Date(date).toLocaleString()}
+              </Text>
+            }
+            </Text>
+            <Flex bg={"green.400"} maxW={"350px"} p={1} borderRadius={"md"}>
+                <Text color={"white"}>{message.text}</Text>
+                <Box
+                  alignSelf={"flex-end"}
+                  ml={1}
+                  color={message.seen ? "blue.400" : ""}
+                  fontWeight={"bold"}
+                >
+                  <BsCheck2All size={16} />
+                </Box>
+              </Flex>
+              </Flex>
       )}
       {message.img && !imageLoaded && (
         <Flex mt={5} w={"200px"}>
@@ -49,13 +59,20 @@ function Message({ownMessage, message}) {
       <Avatar size="sm" src={currentUser.profilePic}/>
         </Flex>
     ) : (
-    <Flex gap={2} >
+    <Flex gap={2} onDoubleClick={() => setDate(message.createdAt)}>
         <Avatar size="sm" src={selectedConversation.profilePic}/>
         {message.text && (
-        <Flex bg={"gray.500"} maxW={"350px"} p={1} borderRadius={"md"}>
+        <Flex display={"column"}>
+              {date && 
+              <Text color={"white"} display={'flex'} justifyContent={"flex-end"} fontSize={7}>
+                {new Date(date).toLocaleString()}
+              </Text>
+            }
+        <Flex bg={"gray.500"} maxW={"350px"} p={1} borderRadius={"md"} w={'fit-content'}>
           <Text color={"white"}>
               {message.text}
           </Text>
+        </Flex>
         </Flex>
         )}
         {message.img && !imageLoaded && (
