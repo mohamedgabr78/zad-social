@@ -13,117 +13,119 @@ function MessageContainer() {
 
     const showToast = useShowToast()
     const selectedConversation = useRecoilValue(selectedConversationAtom);
-    const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState([]);
     const currentUser = useRecoilValue(userAtom);
-    const messagesEndRef = useRef(null);
+    const [loadingMessages, setLoadingMessages] = useState(true);   
+    const messageEndRef = useRef(null);
+    const setConversations = useRecoilState(conversationAtom);
     const {socket} = useSocket();
-    const setConversation = useRecoilState(conversationAtom);
     
     useEffect(() => {
-        socket.on('newMessage', (message) => {
+		socket.on("newMessage", (message) => {
+			if (selectedConversation._id === message.conversationId) {
+				setMessages((prev) => [...prev, message]);
+			}
 
-            if(selectedConversation._id === message.conversationId) {
-                setMessages((prev) => [...prev, message]);
-            }
+			// make a sound if the window is not focused
+			if (!document.hasFocus()) {
+				const sound = new Audio(messageSound);
+				sound.play();
+			}
 
-            if(!document.hasFocus()){
-            const sound = new Audio(messageSound);
-            sound.play();
-        }
-            setConversation((prev) => {
-                const updatedConversations = prev.map((conversation) => {
-                    if (conversation._id === message.conversationId) {
-                        return {
-                            ...conversation,
-                            lastMessage: {
-                                text: message.text,
-                                sender: message.sender,
-                            }
-                        }
-                    }
-                    return conversation;
-                });
-                return updatedConversations;
-            });
-        }
-        );
-        return () => socket && socket.off('newMessage');
-    }, [socket, selectedConversation, setConversation]);
+			setConversations((prev) => {
+				const updatedConversations = prev.map((conversation) => {
+					if (conversation._id === message.conversationId) {
+						return {
+							...conversation,
+							lastMessage: {
+								text: message.text,
+								sender: message.sender,
+							},
+						};
+					}
+					return conversation;
+				});
+				return updatedConversations;
+			});
+		});
 
-    useEffect(() => {
-        const lastMessageFromOtherUser = messages.length && messages[messages.length-1].sender !== currentUser._id;
+		return () => socket.off("newMessage");
+	}, [socket, selectedConversation, setConversations]);
 
-        if (lastMessageFromOtherUser) {
-            socket.emit('markMessageSeen', {
-                conversationId: selectedConversation._id,
-                userId: selectedConversation.userId
-            });
-        }
-        socket.on('messageSeen', ({conversationId}) => {
-            if (selectedConversation._id === conversationId) {
-                setMessages((prev) =>{
-                    const updatedMessages = prev.map((message) => {
-                        if (!message.seen) {
-                            return {
-                                ...message,
-                                seen: true
-                            }
-                        }
-                        return message;
-                    });
-                    return updatedMessages;
-                });
-            }
-        });
+	useEffect(() => {
+		const lastMessageIsFromOtherUser = messages.length && messages[messages.length - 1].sender !== currentUser._id;
+		if (lastMessageIsFromOtherUser) {
+			socket.emit("markMessageSeen", {
+				conversationId: selectedConversation._id,
+				userId: selectedConversation.userId,
+			});
+		}
 
-    },[messages, currentUser._id, selectedConversation, socket]);
+		socket.on("messageSeen", ({ conversationId }) => {
+			if (selectedConversation._id === conversationId) {
+				setMessages((prev) => {
+					const updatedMessages = prev.map((message) => {
+						if (!message.seen) {
+							return {
+								...message,
+								seen: true,
+							};
+						}
+						return message;
+					});
+					return updatedMessages;
+				});
+			}
+		});
+	}, [socket, currentUser._id, messages, selectedConversation]);
 
+	useEffect(() => {
+		messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+	}, [messages]);
 
-    useEffect(() => {
-        const getMessages = async () => {
-            if(selectedConversation.mock) return;
-            setLoading(true);
-            try {
-                const res = await fetch(`/api/messages/${selectedConversation.userId}`);
-                const data = await res.json();
-                if (data.error) {
-                    showToast("Error", data.error, "error")
-                }
-                setMessages(data);
-                setLoading(false);
-            }
-            catch (error) {
-                showToast("Error", error, "error")
-            }
-        }
-        getMessages();
-    }
-    , [showToast, selectedConversation.userId, selectedConversation.mock]);
+	useEffect(() => {
+		const getMessages = async () => {
+			setLoadingMessages(true);
+			setMessages([]);
+			try {
+				if (selectedConversation.mock) return;
+				const res = await fetch(`/api/messages/${selectedConversation.userId}`);
+				const data = await res.json();
+				if (data.error) {
+					showToast("Error", data.error, "error");
+					return;
+				}
+				setMessages(data);
+			} catch (error) {
+				showToast("Error", error.message, "error");
+			} finally {
+				setLoadingMessages(false);
+			}
+		};
 
-    useEffect(() => {
-        if (!loading) {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [messages, loading]);
+		getMessages();
+	}, [showToast, selectedConversation.userId, selectedConversation.mock]);
 
-
-  return (
-    <Flex borderRadius={"md"} p={2} flexDir={"column"} bg={"gray.600"} w={'full'} m={2}>
-        <Flex flexDir={"row"} p={2} overflowY={"auto"} maxH={"80vh"}>
-            {/* Messages */}
-			<Flex w={"full"} h={7} alignItems={"center"} gap={2}>
+	return (
+		<Flex
+			flex='70'
+			bg="gray.600"
+			borderRadius={"md"}
+			p={2}
+			flexDirection={"column"}
+		>
+			{/* Message header */}
+			<Flex w={"full"} h={12} alignItems={"center"} gap={2}>
 				<Avatar src={selectedConversation.profilePic} size={"sm"} />
 				<Text display={"flex"} alignItems={"center"}>
-                    {selectedConversation.username}
-					<Image src='/assets/verified.png' w={4} h={4} ml={1} />
+					{selectedConversation.username} <Image src='/assets/verified.png' w={4} h={4} ml={1} />
 				</Text>
 			</Flex>
 
-        </Flex>
-        <Divider />
-        <Flex flexDir={"column"} gap={4} my={4} p={2} height={"400px"} overflowY={"auto"}>
-            {loading && 
+			<Divider />
+
+			<Flex flexDir={"column"} gap={4} my={4} p={2} height={"400px"} overflowY={"auto"}>
+				{loadingMessages &&
 					[...Array(5)].map((_, i) => (
 						<Flex
 							key={i}
@@ -131,7 +133,6 @@ function MessageContainer() {
 							alignItems={"center"}
 							p={1}
 							borderRadius={"md"}
-                            // if i is even, align the message to the start, else align the message to the end
 							alignSelf={i % 2 === 0 ? "flex-start" : "flex-end"}
 						>
 							{i % 2 === 0 && <SkeletonCircle size={7} />}
@@ -140,19 +141,25 @@ function MessageContainer() {
 								<Skeleton h='8px' w='250px' />
 								<Skeleton h='8px' w='250px' />
 							</Flex>
-                            {/** if i is odd, show the avatar after the message*/}
 							{i % 2 !== 0 && <SkeletonCircle size={7} />}
 						</Flex>
-                    ))}
+					))}
 
-            {!loading && messages.map((message) => (
-                <Message key={message._id} ownMessage={currentUser._id === message.sender} message={message} />
-            ))}
-                    <div ref={messagesEndRef} />
-        </Flex>
-        <MessageInput setMessages={setMessages}/>
-    </Flex>
-  )
-}
+				{!loadingMessages &&
+					messages.map((message) => (
+						<Flex
+							key={message._id}
+							direction={"column"}
+							ref={messages.length - 1 === messages.indexOf(message) ? messageEndRef : null}
+						>
+							<Message message={message} ownMessage={currentUser._id === message.sender} />
+						</Flex>
+					))}
+			</Flex>
 
-export default MessageContainer
+			<MessageInput setMessages={setMessages} />
+		</Flex>
+	);
+};
+
+export default MessageContainer;
