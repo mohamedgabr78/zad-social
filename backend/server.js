@@ -1,5 +1,4 @@
 import express from 'express';
-import path from 'path';
 import connectDB from './database/connectDB.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
@@ -10,14 +9,11 @@ import cors from 'cors';
 import {v2 as cloudinary} from 'cloudinary';
 import { app, httpServer } from './socket/socket.js';
 
-console.log(process.env.NODE_ENV);
-
 
 dotenv.config();
 connectDB(); 
 
 const PORT = process.env.PORT || 5000;
-const __dirname = path.resolve();
 
 // cloudinary config
 cloudinary.config({
@@ -40,14 +36,6 @@ app.use('/api/users', userRoutes); // all routes in userRoutes will start with /
 app.use('/api/posts', postRoutes); // all routes in postRoutes will start with /api/posts
 app.use('/api/messages', messageRoutes); // all routes in messageRoutes will start with /api/messages
 
-
-if(process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '/frontend/dist')));
-
-    // React build
-    app.get('*', (req, res) =>
-         res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'))
-)}
 
 httpServer.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
