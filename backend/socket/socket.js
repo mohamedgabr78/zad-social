@@ -8,7 +8,7 @@ const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "/",
+        origin: "/https://zad-social.onrender.com/",
         methods: ["GET", "POST"]
     }
 });
