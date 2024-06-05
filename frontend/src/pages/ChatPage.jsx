@@ -167,7 +167,7 @@ function ChatPage() {
 						onlineUsers.includes(conversation.members[0]._id)}/>)
 					)}
 				</Flex>
-                { selectedConversation._id !== ''? ( 
+                { selectedConversation._id !== ''? (
 					<MessageContainer/>
 					) : (
 					<Flex

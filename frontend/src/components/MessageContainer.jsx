@@ -1,4 +1,4 @@
-import { Avatar, Flex, Text, Image, Divider, SkeletonCircle, Skeleton } from '@chakra-ui/react'
+import { Avatar, Flex, Text, Image, Divider, SkeletonCircle, Skeleton, AvatarBadge } from '@chakra-ui/react'
 import Message from './Message'
 import MessageInput from './MessageInput'
 import { useEffect, useState, useRef } from 'react'
@@ -9,7 +9,7 @@ import { useSocket } from '../context/SocketContext'
 import messageSound from '../assets/sounds/notification.mp3'
 
 
-function MessageContainer() {
+function MessageContainer(isOnline) {
 
     const showToast = useShowToast()
     const selectedConversation = useRecoilValue(selectedConversationAtom);
@@ -116,7 +116,9 @@ function MessageContainer() {
 		>
 			{/* Message header */}
 			<Flex w={"full"} h={12} alignItems={"center"} gap={2}>
-				<Avatar src={selectedConversation.profilePic} size={"sm"} />
+				<Avatar src={selectedConversation.profilePic} size={"sm"}>
+                    {isOnline && <AvatarBadge boxSize="1em" bg="green.500" />}
+                </Avatar>
 				<Text display={"flex"} alignItems={"center"}>
 					{selectedConversation.username} <Image src='/assets/verified.png' w={4} h={4} ml={1} />
 				</Text>
