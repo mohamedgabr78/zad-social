@@ -42,7 +42,7 @@ const Header = () => {
             <Image
             cursor={"pointer"}
             w={6}
-            src={colorMode === "dark" ? "/light-logo.svg" : "/dark-logo.svg"}
+            src={colorMode === "dark" ? "/assets/light-logo.svg" : "/assets/dark-logo.svg"}
             onClick={()=>toggleColorMode()}
             alt="logo" />
 

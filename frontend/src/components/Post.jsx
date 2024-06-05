@@ -70,7 +70,7 @@ const Post = ({ post, postedBy }) => {
                         <Flex justifyContent={"space-between"} w={'full'}>
                             <Flex gap={2}>
                                 <Text fontSize={"sm"} fontWeight={"bold"}>{user.username}</Text>
-                                <Image src='/verified.png' w={4} h={4} />
+                                <Image src='/assets/verified.png' w={4} h={4} />
                             </Flex>
                             <Flex gap={2} alignItems={'center'}>
                                 <Text fontSize={"sm"} color={'gray.light'}>{

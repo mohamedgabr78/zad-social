@@ -116,7 +116,7 @@ function MessageContainer() {
 				<Avatar src={selectedConversation.profilePic} size={"sm"} />
 				<Text display={"flex"} alignItems={"center"}>
                     {selectedConversation.username}
-					<Image src='/verified.png' w={4} h={4} ml={1} />
+					<Image src='/assets/verified.png' w={4} h={4} ml={1} />
 				</Text>
 			</Flex>
 

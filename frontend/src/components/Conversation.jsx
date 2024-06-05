@@ -56,7 +56,7 @@ function Conversation({conversation, isOnline}) {
         <Stack>
             <Text fontWeight={700} display={'flex'} alignItems={'center'}>
                 {user.username}
-                <Image src="/verified.png" alt="online" boxSize={2} ml={1} w={4} h={4} />
+                <Image src="/assets/verified.png" alt="online" boxSize={2} ml={1} w={4} h={4} />
                 </Text>
             <Text fontSize={"xs"} display={'flex'} alignItems={'center'} gap={1}>
                 {lastMessage.sender === currentUser[0]._id ? (
