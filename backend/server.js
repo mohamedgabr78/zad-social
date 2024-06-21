@@ -11,8 +11,6 @@ import {v2 as cloudinary} from 'cloudinary';
 import { app, httpServer } from './socket/socket.js';
 import job from './utils/helpers/cron.js';
 
-console.log(process.env.NODE_ENV);
-
 
 dotenv.config();
 connectDB(); 
