@@ -42,6 +42,7 @@ project-root/
 │ └── ...
 │
 └── backend/
+│
 ├── package.json
 └── Models
 ├── Conversation Model
@@ -59,6 +60,9 @@ project-root/
 └── Utils
 └── Middlewares
 └── Database
+│
+├── package.json         <-- Root package.json (for overall project)
+└── Dockerfile           <-- Dockerfile for building and running the application
 ## Frontend
 
 The frontend of ZAD Social is built using React and Vite. It utilizes Chakra UI for styling and Recoil for state management.
