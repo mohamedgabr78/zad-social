@@ -1,0 +1,33 @@
+services:
+  - name: mongodb
+    type: docker
+    env: 
+      - MONGO_INITDB_ROOT_USERNAME=mogab
+      - MONGO_INITDB_ROOT_PASSWORD=1994
+    containers:
+      - name: mongodb
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        volumes:
+          - name: mongo-data
+            path: /data/db
+
+  - name: backend
+    type: docker
+    env: 
+      - .env
+    containers:
+      - name: backend
+        buildPath: .
+        dockerfilePath: Dockerfile
+        envVars:
+          - MONGODB_URI=${MONGODB_URI}
+        ports:
+          - 5000:5000
+        dependsOn:
+          - mongodb
+
+volumes:
+  - name: mongo-data
+    mountPath: /data/db
