@@ -7,8 +7,8 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install dependencies including mongoose
-RUN npm install mongoose
+# Install dependencies including mongoose and redis
+RUN npm install mongoose redis
 
 # Copy the backend and frontend directories
 COPY ./backend ./backend

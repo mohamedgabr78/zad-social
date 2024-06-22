@@ -27,10 +27,8 @@ function MessageContainer(isOnline) {
 			}
 
 			// make a sound if the window is not focused
-			if (!document.hasFocus()) {
 				const sound = new Audio(messageSound);
 				sound.play();
-			}
 
 			setConversations((prev) => {
 				const updatedConversations = prev.map((conversation) => {

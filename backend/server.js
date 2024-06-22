@@ -9,7 +9,7 @@ import messageRoutes from './routes/messageRoutes.js';
 import cors from 'cors';
 import {v2 as cloudinary} from 'cloudinary';
 import { app, httpServer } from './socket/socket.js';
-import job from './utils/helpers/cron.js';
+import job from './cron/cron.js';
 
 
 dotenv.config();
