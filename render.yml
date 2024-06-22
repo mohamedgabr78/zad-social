@@ -34,7 +34,6 @@ services:
             value: production
         dependsOn:
           - mongodb
-          - redis
 
 volumes:
   - name: mongo-data
