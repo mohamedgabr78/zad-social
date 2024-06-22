@@ -3,7 +3,6 @@ import http from 'http';
 import express from 'express';
 import Message from '../models/messageModel.js';
 import Conversation from '../models/conversationModel.js';
-import redisAdapter from 'socket.io-redis'; // Import socket.io-redis adapter
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -14,11 +13,6 @@ const io = new Server(httpServer, {
     }
 });
 
-// Configure socket.io to use the redis adapter
-io.adapter(redisAdapter({
-    host: 'redis',
-    port: 6379
-}));
 
 export const getRecipientSocketId = (recipientId) => {
     return userSocketMap[recipientId];
@@ -45,6 +39,7 @@ io.on('connection', (socket) => {
             await Message.updateMany({
                 conversationId: conversationId,
                 seen: false
+            }, {
             }, {
                 $set: { seen: true }
             });
