@@ -13,14 +13,6 @@ services:
           - name: mongo-data
             path: /data/db
 
-  - name: redis
-    type: docker
-    containers:
-      - name: redis
-        image: redis:latest
-        ports:
-          - 6379:6379
-
   - name: backend
     type: docker
     containers:
@@ -34,7 +26,6 @@ services:
             value: production
         dependsOn:
           - mongodb
-          - redis
 
 volumes:
   - name: mongo-data
