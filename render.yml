@@ -13,22 +13,29 @@ services:
           - name: mongo-data
             path: /data/db
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6379:6379"
+  - name: redis
+    type: docker
+    containers:
+      - name: redis
+        image: redis:latest
+        ports:
+          - 6379:6379
 
-  backend:
-    build: .
-    container_name: backend
-    ports:
-      - "5000:5000"
-    env_file: 
-      - .env
-    depends_on:
-      - mongodb
-      - redis
+  - name: backend
+    type: docker
+    containers:
+      - name: backend
+        build:
+          dockerfile: Dockerfile
+        ports:
+          - 5000:5000
+        envVars:
+          - key: ENVIRONMENT
+            value: production
+        dependsOn:
+          - mongodb
+          - redis
 
 volumes:
-  mongo-data:
+  - name: mongo-data
+    mountPath: /data/db
