@@ -15,8 +15,6 @@ services:
 
   - name: redis
     type: docker
-    env: 
-      - REDIS_PASSWORD=redis
     containers:
       - name: redis
         image: redis:latest

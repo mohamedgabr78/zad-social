@@ -1,5 +1,5 @@
 # Use the official Node.js image as the base image
-FROM node:20
+FROM node:18.12.0
 
 # Set the working directory to /usr/src/app
 WORKDIR /usr/src/app
@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies including mongoose and redis
-RUN npm install mongoose redis socket.io-redis
+RUN npm install mongoose redis
 
 # Copy the backend and frontend directories
 COPY ./backend ./backend
