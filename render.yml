@@ -15,6 +15,9 @@ services:
 
   - name: redis
     type: docker
+    env: 
+      - REDIS_host=redis
+      - REDIS_port=6379
     containers:
       - name: redis
         image: redis:latest
