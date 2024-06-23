@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies including mongoose and redis
-RUN npm install mongoose
+RUN npm install mongoose socket.io-redis
 
 # Copy the backend and frontend directories
 COPY ./backend ./backend

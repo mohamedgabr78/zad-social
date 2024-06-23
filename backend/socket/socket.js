@@ -1,11 +1,31 @@
 import { Server } from 'socket.io';
 import http from 'http';
 import express from 'express';
+import redis from 'redis';
+import { createAdapter } from 'socket.io-redis';
 import Message from '../models/messageModel.js';
 import Conversation from '../models/conversationModel.js';
 
 const app = express();
 const httpServer = http.createServer(app);
+
+// Redis configuration
+const redisOptions = {
+    host: 'redis',
+    port: 6379,
+};
+
+const pubClient = redis.createClient(redisOptions);
+const subClient = redis.createClient(redisOptions);
+
+pubClient.on('error', (error) => {
+    console.error('Redis pubClient error:', error);
+});
+
+subClient.on('error', (error) => {
+    console.error('Redis subClient error:', error);
+});
+
 const io = new Server(httpServer, {
     cors: {
         origin: "http://localhost:3000",
@@ -13,6 +33,8 @@ const io = new Server(httpServer, {
     }
 });
 
+// Set up Redis adapter for Socket.io
+io.adapter(createAdapter({ pubClient, subClient }));
 
 export const getRecipientSocketId = (recipientId) => {
     return userSocketMap[recipientId];
@@ -39,7 +61,6 @@ io.on('connection', (socket) => {
             await Message.updateMany({
                 conversationId: conversationId,
                 seen: false
-            }, {
             }, {
                 $set: { seen: true }
             });
