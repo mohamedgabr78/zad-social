@@ -11,7 +11,7 @@ const httpServer = http.createServer(app);
 
 // Redis configuration
 const redisOptions = {
-    host: 'localhost',
+    host: 'redis',
     port: 6379,
 };
 
